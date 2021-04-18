@@ -1,0 +1,19 @@
+{
+  "name": "photodir-pfm",
+  "version": "0.0.1",
+  "description": "Proyecto fin de modulo",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RubenFern/Photodir-PFM.git"
+  },
+  "author": "Ruben Fernandez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RubenFern/Photodir-PFM/issues"
+  },
+  "homepage": "https://github.com/RubenFern/Photodir-PFM#readme"
+}
