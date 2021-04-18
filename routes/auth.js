@@ -6,8 +6,8 @@ const { validateUser } = require("../middlewares/usuarioRequest");
 const router = Router();
 
 router.post('/login', [
-    check('email', 'Debes introducir un correo').isEmail(),
-    check('password', 'Debes introducir una contraseña').notEmpty(),
+    check('user_name', 'Debes introducir tu nombre de usuario').notEmpty(),
+    check('password', 'Debes introducir tu contraseña').notEmpty(),
     validateUser
 ], login);
 

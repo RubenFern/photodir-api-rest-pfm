@@ -25,8 +25,10 @@ router.post('/registrate', [
     validateUser
 ], addUser);
 
+// Llamo a la función que me valida el token, si el usuario que se conecta lo tiene obtengo su uid
 router.put('/editar-perfil', [
-    check('user_name').custom(userExists),
+    validarJWT,
+    //check('user_name').custom(userExists),
     validateUser
 ], editUser);
 

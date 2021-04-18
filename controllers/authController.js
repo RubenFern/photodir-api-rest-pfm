@@ -1,28 +1,28 @@
 const bcryptjs = require('bcryptjs');
 const {request, response} = require('express');
 
-const Usuario = require('../models/usuarioSchema');
+const User = require('../models/usuarioSchema');
 
 const generarJWT = require('../helpers/generarJWT');
 
 const login = async(req = request, res = response) =>
 {
-    const {email, password} = req.body;
+    const {user_name, password} = req.body;
 
     try
     {
-        // Compruebo el email
-        const usuario = await Usuario.findOne({email});
+        // Compruebo el nombre de usuario
+        const user = await User.findOne({user_name});
 
-        if (!usuario)
+        if (!user)
         {
             return res.status(400).json({
-                message: 'El correo electrónico no es correcto'
+                message: 'El nombre de usuario no es correcto'
             });
         }
 
         // Compruebo la contraseña usando la password recibida en el body con la del usuario que busqué con el email
-        const passwordValida = bcryptjs.compareSync(password, usuario.password);
+        const passwordValida = bcryptjs.compareSync(password, user.password);
 
         if (!passwordValida)
         {
@@ -32,11 +32,11 @@ const login = async(req = request, res = response) =>
         }
 
         // Genero el Token
-        const token = await generarJWT(usuario.id);
+        const token = await generarJWT(user.id);
 
         res.json({
             message: 'Login ok',
-            usuario,
+            user,
             token
         });
     } catch (error)

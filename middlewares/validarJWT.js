@@ -1,7 +1,7 @@
 const {request, response} = require('express');
 const jwt = require('jsonwebtoken');
 
-const Usuario = require('./../models/usuarioSchema');
+const User = require('./../models/usuarioSchema');
 
 const validarJWT = async(req = request, res = response, next) =>
 {
@@ -20,10 +20,10 @@ const validarJWT = async(req = request, res = response, next) =>
         const {uid} = jwt.verify(token, process.env.PRIVATEKEYTOKEN);
 
         // Leo el usuario que corresponde al uid
-        const usuario = await Usuario.findById(uid);
+        const user = await User.findById(uid);
         
         // Guardo el usuario que está conectado en el request
-        req.usuario = usuario;
+        req.user = user;
         next();
 
     } catch (err)

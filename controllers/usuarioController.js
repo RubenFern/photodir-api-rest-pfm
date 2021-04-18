@@ -40,22 +40,22 @@ const addUser = async(req = request, res = response) =>
 
 const editUser = async(req = request, res = response) =>
 {
-    const {user_name} = req.params;
-    const {_id, password, email, ...data} = req.body;
+    // Guardo el uid del usuario conectado
+    const {_id: uid} = req.user;
+    // Desestructuro los campos que no quiero editar
+    const {_id, password, email, user_name, ...data} = req.body;
 
-    // Si introdujo una nueva contraseña la modifico
+    // Si introdujo una nueva contraseña la añado en el data
     if (password)
     {
-        // Almaceno en el data la nueva contraseña hasheada
         hashPassword(data, password);
     }
 
-    const {uid} = await User
-    //const usuario = await User.findByIdAndUpdate(id, data);
+    const user = await User.findByIdAndUpdate(uid, data);
 
     res.json({
         message: 'El usuario ha sido editado',
-        //usuario
+        user,
         uid
     });
 };
@@ -66,7 +66,7 @@ const deleteUser = async(req = request, res = response) =>
 
     // Guardo el usuario que se quiere borrar y el usuario que está conectado
     const user = await User.findById(id);
-    const userConnect = req.usuario;
+    const userConnect = req.user;
 
     // Compruebo que solo pueda eliminar usuarios el administrador y el propio usuario conectado a sí mismo
     if (userConnect.is_admin || JSON.stringify(user._id) == JSON.stringify(userConnect._id))
