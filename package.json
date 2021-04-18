@@ -15,5 +15,14 @@
   "bugs": {
     "url": "https://github.com/RubenFern/Photodir-PFM/issues"
   },
-  "homepage": "https://github.com/RubenFern/Photodir-PFM#readme"
+  "homepage": "https://github.com/RubenFern/Photodir-PFM#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.10.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.12.4"
+  }
 }
