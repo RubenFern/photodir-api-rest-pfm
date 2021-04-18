@@ -2,11 +2,10 @@ require('dotenv').config()
 const express = require('express');
 const app = express();
 
-// Funciones
 const server = require('./server/server');
+const database = require('./database/config');
 const middleware = require('./middlewares/middleware');
 const routes = require('./routes/routes');
-const database = require('./database/config');
 
 // Arranco el servidor
 server(app);

@@ -1,45 +1,46 @@
 const {request, response} = require('express');
 const { hashPassword } = require('../helpers/hashPassword');
 
-const Usuario = require('./../models/usuario');
+const User = require('../models/usuarioSchema');
 
-const viewUsers = async(req = request, res = response) =>
+const viewUser = async(req = request, res = response) =>
 {
     // Doy la posibilidad de añadir parámetros de búsqueda en la URL
-    const {from, limit} = req.query;
+    const {user_name} = req.params;
 
-    const [usuarios, totalUsuarios] = await Promise.all([
+    /*const [usuarios, totalUsuarios] = await Promise.all([
         Usuario.find({is_admin: false}).skip(Number(from)).limit(Number(limit)),
         Usuario.countDocuments({is_admin: false})
-    ]);
+    ]);*/
+
+    const user = await User.find({user_name: user_name});
 
     res.json({
-        totalUsuarios,
-        usuarios
+        user
     });
 };
 
 const addUser = async(req = request, res = response) =>
 {
     // Desestructuro los parámetros que quiero y los devuelvo en la instancia del modelo
-    const {name, email, password, is_admin} = req.body;
-    const usuario = new Usuario({name, email, password, is_admin});
+    const {name, user_name, email, password} = req.body;
+    const user = new User({name, user_name, email, password});
 
     // Encripto la contraseña
-    hashPassword(usuario, password);
+    hashPassword(user, password);
     
     // Guardo el usuario en la colección
-    await usuario.save(); 
+    await user.save(); 
 
     res.json({
         message: 'El usuario ha sido creado',
-        usuario
+        user
     });
 };
 
 const editUser = async(req = request, res = response) =>
 {
-    const {id} = req.params;
+    const {user_name} = req.params;
     const {_id, password, email, ...data} = req.body;
 
     // Si introdujo una nueva contraseña la modifico
@@ -49,42 +50,44 @@ const editUser = async(req = request, res = response) =>
         hashPassword(data, password);
     }
 
-    const usuario = await Usuario.findByIdAndUpdate(id, data);
+    const {uid} = await User
+    //const usuario = await User.findByIdAndUpdate(id, data);
 
     res.json({
         message: 'El usuario ha sido editado',
-        usuario
+        //usuario
+        uid
     });
 };
 
 const deleteUser = async(req = request, res = response) =>
 {
-    const {id} = req.params;
+    const {user_name} = req.params;
 
     // Guardo el usuario que se quiere borrar y el usuario que está conectado
-    const usuario = await Usuario.findById(id);
-    const usuarioConectado = req.usuario;
+    const user = await User.findById(id);
+    const userConnect = req.usuario;
 
     // Compruebo que solo pueda eliminar usuarios el administrador y el propio usuario conectado a sí mismo
-    if (usuarioConectado.is_admin || JSON.stringify(usuario._id) == JSON.stringify(usuarioConectado._id))
+    if (userConnect.is_admin || JSON.stringify(user._id) == JSON.stringify(userConnect._id))
     {
         return res.json({
             message: 'El usuario se ha eliminado',
-            usuario,
-            usuarioConectado
+            user,
+            userConnect
         });
     } else
     {
         return res.status(403).json({
             message: 'No tienes permisos para eliminar este usuario',
-            usuario,
-            usuarioConectado
+            user,
+            userConnect
         });
     }    
 };
 
 module.exports = {
-    viewUsers,
+    viewUser,
     addUser,
     editUser,
     deleteUser

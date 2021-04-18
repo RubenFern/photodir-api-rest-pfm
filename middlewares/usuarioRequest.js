@@ -1,7 +1,7 @@
 const { validationResult } = require('express-validator');
-const usuario = require('../models/usuario');
+const User = require('../models/usuarioSchema');
 
-const validarUsuario = (req, res, next) =>
+const validateUser = (req, res, next) =>
 {
     const errors = validationResult(req);
 
@@ -13,9 +13,9 @@ const validarUsuario = (req, res, next) =>
     next();
 }
 
-const existeEmail = async(email) =>
+const emailExists = async(email) =>
 {
-    const existeEmail = await usuario.findOne({email});
+    const existeEmail = await User.findOne({email});
 
     if (existeEmail)
     {
@@ -23,9 +23,9 @@ const existeEmail = async(email) =>
     }
 }
 
-const existeUsuario = async(id) =>
+const userExists = async(user_name) =>
 {
-    const existeUsuario = await usuario.findById(id);
+    const existeUsuario = await User.findOne({user_name});
 
     if (!existeUsuario)
     {
@@ -33,9 +33,21 @@ const existeUsuario = async(id) =>
     }
 }
 
+const userNameExists = async(user_name) =>
+{
+    const existeUsuario = await User.findOne({user_name});
+
+    if (existeUsuario)
+    {
+        throw new Error('El nombre de usuario no está disponible');
+    }
+
+}
+
 module.exports = 
 {
-    validarUsuario,
-    existeEmail,
-    existeUsuario
+    validateUser,
+    emailExists,
+    userExists,
+    userNameExists
 }

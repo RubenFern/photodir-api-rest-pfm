@@ -5,14 +5,20 @@ const UsuarioSchema = Schema
     name:
     {
         type: String,
-        required: [true, 'El nombre de usuario es obligatorio'],
+        required: [true, 'Debes introducir tu nombre']
+    },
+
+    user_name:
+    {
+        type: String,
+        required: [true, 'Elige un nombre de usuario para tu perfil'],
         unique: true
     },
 
     email:
     {
         type: String,
-        required: [true, 'El E-Mail es obligatorio'],
+        required: [true, 'Debes introducir un correo electrónico'],
         unique: true
     },
 
@@ -28,10 +34,10 @@ const UsuarioSchema = Schema
         default: "user_image.jpg"
     },
 
-    is_admin:
+    creation_date:
     {
-        type: Boolean,
-        default: false
+        type: Date,
+        default: Date.now()
     }
 });
 
@@ -46,4 +52,5 @@ UsuarioSchema.methods.toJSON = function()
     return usuario;
 }
 
+// Exporto el nombre de la colección (Mongo añade una 's' al final) y el esquema de los atributos
 module.exports = model('Usuario', UsuarioSchema);
