@@ -1,17 +1,13 @@
 const {request, response} = require('express');
+const userConnected = require('../helpers/userConnected');
 
 const isAdmin = (req = request, res = response, next) =>
 {
-    if (!req.user)
-    {
-        // Establezco un error interno
-        return res.status(500).json({
-            message: 'Para validar si es admin se necesita el token de conexión'
-        });
-    }
+    // Compruebo si el usuario está conectado
+    userConnected(req, res);
 
     // Obtengo el usuario que está conectado
-    const {is_admin} = req.user;
+    const {is_admin} = req.user_connected;
 
     if (!is_admin)
     {
