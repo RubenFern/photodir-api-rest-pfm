@@ -34,6 +34,12 @@ const UsuarioSchema = Schema
         default: "user_image.jpg"
     },
 
+    is_admin:
+    {
+        type: Boolean,
+        default: false
+    },
+
     creation_date:
     {
         type: Date,
