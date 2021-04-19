@@ -3,7 +3,7 @@ const {request, response} = require('express');
 
 const User = require('../models/usuarioSchema');
 
-const generarJWT = require('../helpers/generarJWT');
+const generateJWT = require('../helpers/generarJWT');
 
 const login = async(req = request, res = response) =>
 {
@@ -22,9 +22,9 @@ const login = async(req = request, res = response) =>
         }
 
         // Compruebo la contraseña usando la password recibida en el body con la del usuario que busqué con el email
-        const passwordValida = bcryptjs.compareSync(password, user.password);
+        const validPassword = bcryptjs.compareSync(password, user.password);
 
-        if (!passwordValida)
+        if (!validPassword)
         {
             return res.status(400).json({
                 message: 'La contraseña no es correcta'
@@ -32,7 +32,7 @@ const login = async(req = request, res = response) =>
         }
 
         // Genero el Token
-        const token = await generarJWT(user.id);
+        const token = await generateJWT(user.id);
 
         res.json({
             message: 'Login ok',
