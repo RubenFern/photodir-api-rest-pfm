@@ -34,7 +34,7 @@ const validateJWT = async(req = request, res = response, next) =>
         const user = await User.findById(uid);
         
         // Guardo el usuario que está conectado en el request
-        req.user = user;
+        req.user_connected = user;
         next();
 
     } catch (err)
