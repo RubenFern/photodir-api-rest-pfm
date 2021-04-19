@@ -3,7 +3,7 @@ const { check } = require("express-validator");
 
 // Llamo a la función de validación
 const { validateUser, emailExists, userExists, userNameExists } = require("../middlewares/usuarioRequest");
-const validarJWT = require("../middlewares/validarJWT");
+const validateJWT = require("../middlewares/validarJWT");
 
 // Llamada al controlador
 const {viewUser, addUser, editUser, deleteUser} = require('./../controllers/usuarioController');
@@ -27,17 +27,15 @@ router.post('/registrate', [
 
 // Llamo a la función que me valida el token, si el usuario que se conecta lo tiene obtengo su uid
 router.put('/editar-perfil', [
-    validarJWT,
-    //check('user_name').custom(userExists),
+    validateJWT,
     validateUser
 ], editUser);
 
 //router.patch('/:id', editUser);
 
 // Protejo la ruta eliminar con la validación de token. *Todas las funciones dentro de la ruta comparten el mismo request*
-router.delete('/:user_name', [
-    validarJWT,
-    check('user_name').custom(userExists),
+router.delete('/eliminar-cuenta', [
+    validateJWT,
     validateUser
 ], deleteUser)
 
