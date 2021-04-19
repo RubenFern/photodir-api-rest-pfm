@@ -1,8 +1,9 @@
 const {request, response} = require('express');
-const { hashPassword } = require('../helpers/hashPassword');
 
 const User = require('../models/userSchema');
+
 const deleteJWT = require("../helpers/deleteJWT");
+const { hashPassword } = require('../helpers/hashPassword');
 
 const viewUser = async(req = request, res = response) =>
 {
@@ -46,7 +47,7 @@ const editUser = async(req = request, res = response) =>
     // Desestructuro los campos que no quiero editar
     const {_id, password, email, user_name, ...data} = req.body;
 
-    // Si introdujo una nueva contraseña la añado en el data
+    // Si introdujo una nueva contraseña la hasheo y la añado en el data
     if (password)
     {
         hashPassword(data, password);
