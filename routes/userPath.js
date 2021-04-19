@@ -28,6 +28,7 @@ router.post('/registrate', [
 // Llamo a la función que me valida el token, si el usuario que se conecta lo tiene obtengo su uid
 router.put('/editar-perfil', [
     validateJWT,
+    check('password', 'La contraseña debe tener al menos 6 caracteres').optional().isLength({min: 6}),
     validateUser
 ], editUser);
 
@@ -35,8 +36,7 @@ router.put('/editar-perfil', [
 
 // Protejo la ruta eliminar con la validación de token. *Todas las funciones dentro de la ruta comparten el mismo request*
 router.delete('/eliminar-cuenta', [
-    validateJWT,
-    validateUser
+    validateJWT
 ], deleteUser)
 
 module.exports = router;
