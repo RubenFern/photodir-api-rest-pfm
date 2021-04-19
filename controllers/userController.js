@@ -4,6 +4,7 @@ const User = require('../models/userSchema');
 
 const deleteJWT = require("../helpers/deleteJWT");
 const { hashPassword } = require('../helpers/hashPassword');
+const userConnected = require('../helpers/userConnected');
 
 const viewUser = async(req = request, res = response) =>
 {
@@ -42,8 +43,11 @@ const addUser = async(req = request, res = response) =>
 
 const editUser = async(req = request, res = response) =>
 {
+    // Compruebo si el usuario está conectado
+    userConnected(req, res);
+
     // Guardo el uid del usuario conectado
-    const {_id: uid} = req.user;
+    const {_id: uid} = req.user_connected;
     // Desestructuro los campos que no quiero editar
     const {_id, password, email, user_name, ...data} = req.body;
 
@@ -64,8 +68,11 @@ const editUser = async(req = request, res = response) =>
 
 const deleteUser = async(req = request, res = response) =>
 {
+    // Compruebo si el usuario está conectado
+    userConnected(req, res);
+
     // Guardo el uid del usuario conectado
-    const {_id: uid} = req.user;
+    const {_id: uid} = req.user_connected;
 
     const userDelete = await User.findByIdAndDelete(uid);
 
