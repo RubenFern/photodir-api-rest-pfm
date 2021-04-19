@@ -37,6 +37,6 @@ router.put('/editar-perfil', [
 // Protejo la ruta eliminar con la validación de token. *Todas las funciones dentro de la ruta comparten el mismo request*
 router.delete('/eliminar-cuenta', [
     validateJWT
-], deleteUser)
+], deleteUser);
 
 module.exports = router;
