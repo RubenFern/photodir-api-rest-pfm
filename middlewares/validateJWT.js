@@ -1,6 +1,6 @@
 const {request, response} = require('express');
 const jwt = require('jsonwebtoken');
-const TokensNoValidos = require('../models/tokensNoValidosSchema');
+const TokensInvalid = require('../models/TokenInvalidSchema');
 
 const User = require('../models/userSchema');
 
@@ -16,9 +16,9 @@ const validateJWT = async(req = request, res = response, next) =>
     }
 
     // Compruebo que no esté en la lista negra
-    const invalidToken = await TokensNoValidos.findOne({token});
+    const tokenInvalid = await TokensInvalid.findOne({token});
 
-    if (invalidToken)
+    if (tokenInvalid)
     {
         return res.status(401).json({
             message: 'El token no es válido'

@@ -1,6 +1,6 @@
 const {Schema, model} = require('mongoose');
 
-const UsuarioSchema = Schema
+const UserSchema = Schema
 ({
     name:
     {
@@ -42,21 +42,26 @@ const UsuarioSchema = Schema
 
     creation_date:
     {
-        type: Date,
-        default: Date.now()
+        type: String,
+        default: () =>
+        {
+            const date = new Date();
+
+            return date.toLocaleString();
+        }
     }
 });
 
 // Impido que el JSON me devuelva la contraseña y la versión para tener solo los datos del usuario con los que trabajar
-UsuarioSchema.methods.toJSON = function()
+UserSchema.methods.toJSON = function()
 {
-    const {__v, password, _id, ...usuario} = this.toObject();
+    const {__v, password, _id, ...user} = this.toObject();
 
     // Cambio el nombre de _id a uid
-    usuario.uid = _id;
+    user.uid = _id;
 
-    return usuario;
+    return user;
 }
 
 // Exporto el nombre de la colección (Mongo añade una 's' al final) y el esquema de los atributos
-module.exports = model('Usuario', UsuarioSchema);
+module.exports = model('User', UserSchema);
