@@ -2,7 +2,7 @@ const TokensInvalid = require('../models/TokenInvalidSchema');
 
 /**
  * Cuando el usuario elimine su cuenta o cierre sesión entra esta función para almacenar su token en una 
- * lista negra. Así impido que se pueda volver el token mientras aún esté activo
+ * lista negra. Así impido que se pueda volver a usar el token mientras esté aún activo
 */
 const deleteJWT = async(req, res) =>
 {
