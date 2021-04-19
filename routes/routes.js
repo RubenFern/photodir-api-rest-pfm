@@ -1,8 +1,8 @@
 const routes = (app) =>
 {
     // Ruta principal de la apliación
-    app.use('/', require('./usuarios'));
-    app.use('/', require('./auth'));
+    app.use('/', require('./userPath'));
+    app.use('/', require('./authPath'));
 }
 
 module.exports = routes;

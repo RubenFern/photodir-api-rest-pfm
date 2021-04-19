@@ -1,4 +1,4 @@
-const invalidTokens = require('../models/tokensNoValidos');
+const invalidTokens = require('../models/tokensNoValidosSchema');
 
 /**
  * Cuando el usuario elimine su cuenta o cierre sesión entra esta función para almacenar su token en una 

@@ -2,11 +2,11 @@ const { Router } = require("express");
 const { check } = require("express-validator");
 
 // Llamo a la función de validación
-const { validateUser, emailExists, userExists, userNameExists } = require("../middlewares/usuarioRequest");
-const validateJWT = require("../middlewares/validarJWT");
+const { validateUser, emailExists, userExists, userNameExists } = require("../middlewares/validateUser");
+const validateJWT = require("../middlewares/validateJWT");
 
 // Llamada al controlador
-const {viewUser, addUser, editUser, deleteUser} = require('./../controllers/usuarioController');
+const {viewUser, addUser, editUser, deleteUser} = require('../controllers/userController');
 
 const router = Router();
 

@@ -1,8 +1,8 @@
 const {request, response} = require('express');
 const jwt = require('jsonwebtoken');
-const TokensNoValidos = require('../models/tokensNoValidos');
+const TokensNoValidos = require('../models/tokensNoValidosSchema');
 
-const User = require('./../models/usuarioSchema');
+const User = require('../models/userSchema');
 
 const validateJWT = async(req = request, res = response, next) =>
 {

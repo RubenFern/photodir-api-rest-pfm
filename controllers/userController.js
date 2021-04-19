@@ -1,8 +1,8 @@
 const {request, response} = require('express');
 const { hashPassword } = require('../helpers/hashPassword');
 
-const User = require('../models/usuarioSchema');
-const deleteJWT = require("../helpers/eliminarJWT");
+const User = require('../models/userSchema');
+const deleteJWT = require("../helpers/deleteJWT");
 
 const viewUser = async(req = request, res = response) =>
 {
