@@ -2,6 +2,7 @@ const {request, response} = require('express');
 const { hashPassword } = require('../helpers/hashPassword');
 
 const User = require('../models/usuarioSchema');
+const deleteJWT = require("../helpers/eliminarJWT");
 
 const viewUser = async(req = request, res = response) =>
 {
@@ -23,8 +24,8 @@ const viewUser = async(req = request, res = response) =>
 const addUser = async(req = request, res = response) =>
 {
     // Desestructuro los parámetros que quiero y los devuelvo en la instancia del modelo
-    const {name, user_name, email, password} = req.body;
-    const user = new User({name, user_name, email, password});
+    const {name, user_name, email, password, is_admin} = req.body;
+    const user = new User({name, user_name, email, password, is_admin});
 
     // Encripto la contraseña
     hashPassword(user, password);
@@ -62,28 +63,19 @@ const editUser = async(req = request, res = response) =>
 
 const deleteUser = async(req = request, res = response) =>
 {
-    const {user_name} = req.params;
+    // Guardo el uid del usuario conectado
+    const {_id: uid} = req.user;
 
-    // Guardo el usuario que se quiere borrar y el usuario que está conectado
-    const user = await User.findById(id);
-    const userConnect = req.user;
+    const userDelete = await User.findByIdAndDelete(uid);
 
-    // Compruebo que solo pueda eliminar usuarios el administrador y el propio usuario conectado a sí mismo
-    if (userConnect.is_admin || JSON.stringify(user._id) == JSON.stringify(userConnect._id))
-    {
-        return res.json({
-            message: 'El usuario se ha eliminado',
-            user,
-            userConnect
-        });
-    } else
-    {
-        return res.status(403).json({
-            message: 'No tienes permisos para eliminar este usuario',
-            user,
-            userConnect
-        });
-    }    
+    // Añado el token en la lista negra
+    deleteJWT(req, res);
+
+    res.json({
+        message: 'El usuario se ha eliminado',
+        uid,
+        userDelete
+    }); 
 };
 
 module.exports = {
