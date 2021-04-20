@@ -10,7 +10,7 @@ const TokensInvalid = Schema
 
 TokensInvalid.methods.toJSON = function()
 {
-    const {__v, password, _id, ...tokenInvalid} = this.toObject();
+    const {__v, _id, ...tokenInvalid} = this.toObject();
 
     // Cambio el nombre de _id a uid
     tokenInvalid.uid = _id;
