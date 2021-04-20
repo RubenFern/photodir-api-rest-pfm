@@ -2,15 +2,14 @@ const { Router } = require("express");
 
 const { viewUsers } = require("../controllers/adminController");
 
-const validateAdmin = require("../middlewares/validateAdmin");
+const isAdmin = require("../middlewares/isAdmin");
 const validateJWT = require("../middlewares/validateJWT");
-
 
 const router = Router();
 
 router.get('/usuarios', [
     validateJWT,
-    validateAdmin
+    isAdmin
 ], viewUsers);
 
 module.exports = router;
