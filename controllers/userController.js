@@ -8,13 +8,8 @@ const userConnected = require('../helpers/userConnected');
 
 const viewUser = async(req = request, res = response) =>
 {
-    // Doy la posibilidad de añadir parámetros de búsqueda en la URL
+    // Recojo el usuario por la URL
     const {user_name} = req.params;
-
-    /*const [usuarios, totalUsuarios] = await Promise.all([
-        Usuario.find({is_admin: false}).skip(Number(from)).limit(Number(limit)),
-        Usuario.countDocuments({is_admin: false})
-    ]);*/
 
     const user = await User.find({user_name: user_name});
 
