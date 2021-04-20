@@ -2,7 +2,8 @@ const { Router } = require("express");
 const { check } = require("express-validator");
 
 // Llamo a la función de validación
-const { validateUser, emailExists, userExists, userNameExists } = require("../middlewares/validateUser");
+const { emailExists, userExists, userNameExists } = require("../helpers/validateUser");
+const showErros = require('./../middlewares/showErrors');
 const validateJWT = require("../middlewares/validateJWT");
 
 // Llamada al controlador
@@ -12,7 +13,7 @@ const router = Router();
 
 router.get('/:user_name', [
     check('user_name').custom(userExists),
-    validateUser
+    showErros
 ], viewUser);
 
 router.post('/registrate', [
@@ -22,14 +23,14 @@ router.post('/registrate', [
     check('email', 'El correo no es válido').isEmail(),
     check('password', 'La contraseña debe tener al menos 6 caracteres').isLength({min: 6}),
     check('email').custom(emailExists),
-    validateUser
+    showErros
 ], addUser);
 
 // Llamo a la función que me valida el token, si el usuario que se conecta lo tiene obtengo su uid
 router.put('/editar-perfil', [
     validateJWT,
     check('password', 'La contraseña debe tener al menos 6 caracteres').optional().isLength({min: 6}),
-    validateUser
+    showErros
 ], editUser);
 
 //router.patch('/:id', editUser);
