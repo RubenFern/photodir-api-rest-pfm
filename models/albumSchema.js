@@ -12,8 +12,7 @@ const AlbumSchema = Schema
     name:
     {
         type: String,
-        required: [true, 'El nombre del álbum es obligatorio'],
-        unique: true
+        required: [true, 'El nombre del álbum es obligatorio']
     },
 
     description: 
