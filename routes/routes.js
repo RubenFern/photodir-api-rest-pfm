@@ -5,6 +5,7 @@ const routes = (app) =>
     app.use('/api/login', require('./authPath'));
     app.use('/api/albumes', require('./albumPath'));
 
+    
     // Rutas para los administradores
     app.use('/api/panel', require('./adminPath'));
 }
