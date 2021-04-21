@@ -25,7 +25,9 @@ router.post('/', [
 ], addAlbum);
 
 router.put('/:album_name', [
-    validateJWT
+    validateJWT,
+    check('name', 'El álbum debe tener un nombre').optional().notEmpty(),
+    showErros
 ], editAlbum);
 
 router.delete('/:album_name', [
