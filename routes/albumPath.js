@@ -4,8 +4,8 @@ const { check } = require("express-validator");
 const { viewAlbums, addAlbum, editAlbum, deleteAlbum } = require("../controllers/albumController");
 
 const validateJWT = require("../middlewares/validateJWT");
-const { userExists } = require("../helpers/validateUser");
 const showErros = require("../middlewares/showErrors");
+const { userExists } = require("../helpers/validateUser");
 
 
 const router = Router();
@@ -16,21 +16,20 @@ router.get('/:user_name', [
 ], viewAlbums);
 
 /**
- * Uso el token para obtener el usuario conectafo y así añadir el álbum en su perfil
+ * Uso el token para obtener el usuario conectado y así añadir el álbum en su perfil
  */
 router.post('/', [
     validateJWT,
-    
+    check('name', 'El álbum debe tener un nombre').notEmpty(),
+    showErros
 ], addAlbum);
 
 router.put('/:album_name', [
-    // Valido el token del usuario conectado
-    // Valido que exista el álbum
+    validateJWT
 ], editAlbum);
 
 router.delete('/:album_name', [
-    // Valido el token del usuario conectado
-    // Valido que exista el álbum
+    validateJWT
 ], deleteAlbum);
 
 module.exports = router;
