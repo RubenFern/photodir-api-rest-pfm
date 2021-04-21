@@ -7,9 +7,6 @@ const albumExists = async(uid_user, name) =>
     if (existeAlbum)
     {
         return true;
-    } else
-    {
-        return false;
     }
 }
 
