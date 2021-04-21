@@ -3,11 +3,19 @@ const {request, response} = require('express');
 const userConnected = require('../helpers/userConnected');
 const albumExists = require('../helpers/validateAlbum');
 const Album = require('../models/albumSchema');
+const User = require('../models/userSchema');
 
 const viewAlbums = async(req = request, res = response) =>
 {
     const {user_name} = req.params;
 
+    const uid_user = await User.find({user_name});
+    const albums = await Album.find({uid_user});
+
+    res.json({
+        user_name,
+        albums
+    });
 }
 
 const addAlbum = async(req = request, res = response) =>
@@ -44,17 +52,68 @@ const addAlbum = async(req = request, res = response) =>
     });
 }
 
-const editAlbum = (req = request, res = response) =>
+const editAlbum = async(req = request, res = response) =>
 {
+    // Compruebo si el usuario está conectado
+    userConnected(req, res);
+
+    const {_id: uid_user} = req.user_connected;
+    const {album_name} = req.params;
+    
+    // Recibo los datos que se quieren editar
+    const {name: new_name, ...data} = req.body;
+
+    // Compruebo que el álbum a editar exista
+    if (!await albumExists(uid_user, album_name))
+    {
+        return res.status(401).json({
+            message: 'El álbum no existe'
+        });
+    }
+
+    // Compruebo que el nuevo nombre no sea igual a otro álbum ya creado
+    if (await albumExists(uid_user, new_name))
+    {
+        return res.status(401).json({
+            message: 'Ya has usado este nombre para un álbum'
+        });
+    }
+
+    // Si el álbum introducido el válido obtengo el id del álbum del usuario que quiere editar
+    const {_id: uid_album} = await Album.findOne({name: album_name, uid_user});
+    
+    // Actualizo los datos del álbum
+    const album = await Album.findByIdAndUpdate(uid_album, {name: new_name, ...data});
+
     res.json({
-        message: 'Edito un álbum'
+        message: 'Edito un álbum',
+        album
     });
 }
 
-const deleteAlbum = (req = request, res = response) =>
+const deleteAlbum = async(req = request, res = response) =>
 {
+    // Compruebo que el usuario esté conectado
+    userConnected(req, res)
+
+    const {_id: uid_user} = req.user_connected;
+    const {album_name} = req.params;
+
+    // Compruebo que el álbum a borrar exista
+    if (!await albumExists(uid_user, album_name))
+    {
+        return res.status(401).json({
+            message: 'El álbum no existe'
+        });
+    }
+
+    // Elimino el álbum
+    const {_id: uid_album} = await Album.findOne({uid_user, name: album_name});
+    const album = await Album.findByIdAndDelete(uid_album);
+
     res.json({
-        message: 'Elimino un álbum'
+        message: 'Elimino un álbum',
+        album
     });
 }
 
