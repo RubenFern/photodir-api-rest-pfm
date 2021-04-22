@@ -11,6 +11,9 @@ const viewAlbums = async(req = request, res = response) =>
 
     const uid_user = await User.find({user_name});
     const albums = await Album.find({uid_user});
+    /*const albums = await Album.aggregate([{
+        $lookup: {from: 'users', localField: 'uid_user', foreignField: '_id', as: user_name}
+    }]);*/
 
     res.json({
         user_name,
@@ -38,7 +41,7 @@ const addAlbum = async(req = request, res = response) =>
     if (await albumExists(uid_user, name))
     {
         return res.status(401).json({
-            message: 'Ya tienes creado un álbum con el mismo nombre'
+            message: `Ya tienes creado el álbum de ${name}`
         });
     }
 
@@ -46,7 +49,7 @@ const addAlbum = async(req = request, res = response) =>
 
     await album.save();
 
-    res.json({
+    res.status(201).json({
         message: 'Álbum creado',
         album
     });
@@ -72,14 +75,14 @@ const editAlbum = async(req = request, res = response) =>
     }
 
     // Compruebo que el nuevo nombre no sea igual a otro álbum ya creado
-    if (await albumExists(uid_user, new_name))
+    /*if (await albumExists(uid_user, new_name))
     {
         return res.status(401).json({
             message: 'Ya has usado este nombre para un álbum'
         });
-    }
+    }*/ // No lo compruebo porque el usuario podría editar la descripción pero el nombre no
 
-    // Si el álbum introducido el válido obtengo el id del álbum del usuario que quiere editar
+    // Si el álbum introducido es válido obtengo el id del álbum del usuario que quiere editar
     const {_id: uid_album} = await Album.findOne({name: album_name, uid_user});
     
     // Actualizo los datos del álbum
