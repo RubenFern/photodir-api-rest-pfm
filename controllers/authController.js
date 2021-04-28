@@ -17,7 +17,8 @@ const login = async(req = request, res = response) =>
         if (!user)
         {
             return res.status(400).json({
-                message: 'El nombre de usuario no es correcto'
+                message: 'El nombre de usuario no es correcto',
+                logged: false,
             });
         }
 
@@ -27,7 +28,8 @@ const login = async(req = request, res = response) =>
         if (!validPassword)
         {
             return res.status(400).json({
-                message: 'La contraseña no es correcta'
+                message: 'La contraseña no es correcta',
+                logged: false,
             });
         }
 
@@ -35,7 +37,7 @@ const login = async(req = request, res = response) =>
         const token = await generateJWT(user.id);
 
         res.json({
-            message: 'Login ok',
+            logged: true,
             user,
             token
         });
@@ -43,7 +45,8 @@ const login = async(req = request, res = response) =>
     {
         console.log(error);
         return res.status(500).json({
-            message: 'Ha ocurrido un error al iniciar sesión'
+            message: 'Ha ocurrido un error al iniciar sesión',
+            logged: false,
         });
     }   
 }
