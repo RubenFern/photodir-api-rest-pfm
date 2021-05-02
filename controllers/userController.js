@@ -5,6 +5,7 @@ const User = require('../models/userSchema');
 const deleteJWT = require("../helpers/deleteJWT");
 const { hashPassword } = require('../helpers/hashPassword');
 const userConnected = require('../helpers/userConnected');
+const generateJWT = require('../helpers/generateJWT');
 
 const viewUser = async(req = request, res = response) =>
 {
@@ -32,7 +33,8 @@ const addUser = async(req = request, res = response) =>
 
     res.json({
         message: 'El usuario ha sido creado',
-        user
+        user,
+        logged: true
     });
 };
 

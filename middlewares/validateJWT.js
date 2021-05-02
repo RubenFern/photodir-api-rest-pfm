@@ -11,7 +11,8 @@ const validateJWT = async(req = request, res = response, next) =>
     if (!token)
     {
         return res.status(401).json({
-            message: 'No hay token en la petición'
+            message: 'No hay token en la petición',
+            logged: false
         });
     }
 
@@ -21,7 +22,8 @@ const validateJWT = async(req = request, res = response, next) =>
     if (tokenInvalid)
     {
         return res.status(401).json({
-            message: 'El token no es válido'
+            message: 'El token no es válido',
+            logged: false
         });
     }
 
@@ -41,7 +43,8 @@ const validateJWT = async(req = request, res = response, next) =>
     {
         console.log(err);
         res.status(401).json({
-            message: 'Token no válido'
+            message: 'Token no válido',
+            logged: false
         });
     }
 }

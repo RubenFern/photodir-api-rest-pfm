@@ -16,7 +16,7 @@ router.get('/:user_name', [
     showErros
 ], viewUser);
 
-router.post('/registrate', [
+router.post('/registro', [
     check('user_name').custom(userNameExists),
     check('name', 'El nombre es obligatorio').notEmpty(),
     check('email', 'El correo electrónico es obligatorio').notEmpty(),

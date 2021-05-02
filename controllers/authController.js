@@ -16,7 +16,7 @@ const login = async(req = request, res = response) =>
 
         if (!user)
         {
-            return res.json({
+            return res.status(400).json({
                 message: 'Los datos no son correctos',
                 logged: false,
             });
@@ -27,7 +27,7 @@ const login = async(req = request, res = response) =>
 
         if (!validPassword)
         {
-            return res.json({
+            return res.status(400).json({
                 message: 'Los datos no son correctos',
                 logged: false,
             });
