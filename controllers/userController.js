@@ -5,7 +5,6 @@ const User = require('../models/userSchema');
 const deleteJWT = require("../helpers/deleteJWT");
 const { hashPassword } = require('../helpers/hashPassword');
 const userConnected = require('../helpers/userConnected');
-const generateJWT = require('../helpers/generateJWT');
 
 const viewUser = async(req = request, res = response) =>
 {
@@ -83,7 +82,8 @@ const deleteUser = async(req = request, res = response) =>
     }); 
 };
 
-module.exports = {
+module.exports = 
+{
     viewUser,
     addUser,
     editUser,
