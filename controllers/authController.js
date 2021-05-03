@@ -4,6 +4,7 @@ const {request, response} = require('express');
 const User = require('../models/userSchema');
 
 const generateJWT = require('../helpers/generateJWT');
+const deleteJWT = require('../helpers/deleteJWT');
 
 const login = async(req = request, res = response) =>
 {
@@ -51,6 +52,18 @@ const login = async(req = request, res = response) =>
     }   
 }
 
+// Endpoint para añadir el Token a la lista negra
+const logout = (req = request, res = response) =>
+{
+    // Añado el token en la lista negra
+    deleteJWT(req, res);
+
+    res.json({
+        message: 'El usuario se ha desconectado'
+    }); 
+}
+
 module.exports = {
-    login
+    login,
+    logout
 }
