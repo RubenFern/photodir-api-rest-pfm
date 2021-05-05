@@ -6,7 +6,10 @@ const generateJWT = (uid = '') =>
     {
         const payload = {uid};
 
-        jwt.sign(payload, process.env.PRIVATEKEYTOKEN, (err, token) =>
+        jwt.sign(payload, process.env.PRIVATEKEYTOKEN, 
+        {
+            expiresIn: '24h'
+        }, (err, token) =>
         {
             if (err)
             {
