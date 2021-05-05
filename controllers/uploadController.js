@@ -1,7 +1,8 @@
-const { response } = require("express");
-const path = require('path');
+const { response, request } = require("express");
+const { uploadImage } = require("../helpers/uploadImage");
 
-const uploadImage = (req, res = response) =>
+
+const loadImage = async(req = request, res = response) =>
 {
     // Si nos se han subido archivos retorno un error
     if (!req.files || Object.keys(req.files).length === 0 || !req.files.image)
@@ -12,24 +13,25 @@ const uploadImage = (req, res = response) =>
     }
 
     const { image } = req.files;
-    const uploadPath = path.join(__dirname, '../uploads/', image.name); // Uno la ruta con el path de Node
 
-    // Muevo la imagen subida a mi carpeta uploads
-    image.mv(uploadPath, (error) =>
+    // Subo la imagen
+    try 
     {
-        if (error)
-        {
-            return res.status(500).json({json});
-        }
+        const resp = await uploadImage(image); // Puedo añadir un segundo parámetro para el nombre de la carpeta
 
         res.json({
-            message: 'Imagen subida correctamente'
+            message: resp
         });
-    });
+    } catch (err)
+    {
+        return res.json({
+            message: err
+        });
+    }    
 }
 
 
 module.exports =
 {
-    uploadImage,
+    loadImage,
 }
