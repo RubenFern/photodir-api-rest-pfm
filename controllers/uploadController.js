@@ -1,8 +1,8 @@
 const { response, request } = require("express");
-const { uploadImage } = require("../helpers/uploadImage");
+const { storeImage } = require("../helpers/uploadImage");
 
 
-const loadImage = async(req = request, res = response) =>
+const uploadImage = async(req = request, res = response) =>
 {
     // Si nos se han subido archivos retorno un error
     if (!req.files || Object.keys(req.files).length === 0 || !req.files.image)
@@ -13,11 +13,14 @@ const loadImage = async(req = request, res = response) =>
     }
 
     const { image } = req.files;
+    const user = req.user_connected; // Al validar el Token obtengo el usuario
+    const { folder } = req.params;
 
     // Subo la imagen
     try 
     {
-        const resp = await uploadImage(image); // Puedo añadir un segundo parámetro para el nombre de la carpeta
+        // Guardo la imagen en mi API y en la coleccion correspondiente del usuario que la suba
+        const resp = await storeImage(image, user, folder);
 
         res.json({
             message: resp
@@ -30,8 +33,7 @@ const loadImage = async(req = request, res = response) =>
     }    
 }
 
-
 module.exports =
 {
-    loadImage,
+    uploadImage
 }
