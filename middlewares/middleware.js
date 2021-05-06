@@ -15,7 +15,8 @@ const middleware = (app, express) =>
     // Carga de archivos habilitada
     app.use(fileUpload({
         useTempFiles : true,
-        tempFileDir : '/tmp/'
+        tempFileDir : '/tmp/',
+        createParentPath: true
     }));
 }
 
