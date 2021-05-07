@@ -23,7 +23,7 @@ const uploadImage = async(req = request, res = response) =>
         const resp = await storeImage(image, user, folder);
 
         res.json({
-            message: resp
+            resp
         });
     } catch (err)
     {
