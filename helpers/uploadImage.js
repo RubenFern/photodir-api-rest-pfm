@@ -45,7 +45,13 @@ const storeImage = (image, user = '', folder = '') =>
         // Guardo la imagen en la colección correspondiente del usuario
         saveImageInBD(uid, folder, nameImgUpload);
 
-        resolve('Imagen subida correctamente');
+        const res = 
+        {
+            message: 'Imagen subida correctamente',
+            nameImgUpload
+        }
+
+        resolve(res);
     });
 }
 
