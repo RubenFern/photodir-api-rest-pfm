@@ -1,18 +1,17 @@
 const {Schema, model} = require('mongoose');
 
-const AlbumSchema = Schema
+const PhotoSchema = Schema
 ({
-    uid_user: 
+    uid_album: 
     {
         type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: [true, 'El álbum debe pertenecer a un usuario']
+        ref: 'Album',
+        required: [true, 'La fotografía debe pertenecer a un álbum']
     },
 
-    name:
+    title:
     {
         type: String,
-        required: [true, 'El nombre del álbum es obligatorio']
     },
 
     description: 
@@ -23,7 +22,7 @@ const AlbumSchema = Schema
     image:
     {
         type: String,
-        default: 'default_image.jpg'
+        required: [true, 'Debes subir una fotografía']
     },
 
     creation_date:
@@ -38,14 +37,14 @@ const AlbumSchema = Schema
     }
 });
 
-AlbumSchema.methods.toJSON = function()
+PhotoSchema.methods.toJSON = function()
 {
-    const {__v, _id, ...album} = this.toObject();
+    const {__v, _id, ...photo} = this.toObject();
 
     // Cambio el nombre de _id a uid
-    album.uid = _id;
+    photo.uid = _id;
 
-    return album;
+    return photo;
 }
 
-module.exports = model('Album', AlbumSchema);
+module.exports = model('Photo', PhotoSchema);

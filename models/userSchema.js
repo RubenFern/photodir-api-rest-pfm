@@ -31,7 +31,7 @@ const UserSchema = Schema
     image:
     {
         type: String,
-        default: "user_image.jpg"
+        default: "default_image.jpg"
     },
 
     is_admin:
