@@ -1,10 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 
-// Colecciones
-const UserSchema = require('../models/userSchema');
-const AlbumSchema = require('../models/albumSchema');
-
 const storeImage = (image, user = '', folder = '') =>
 {
     // Subo la imagen mediante una promesa
@@ -23,7 +19,7 @@ const storeImage = (image, user = '', folder = '') =>
         }
 
         // Con todo válido guardo el usuario para almacenar la imagen en su carpeta y en su base de datos
-        const { _id: uid, user_name } = user;
+        const { user_name } = user;
         
         // Cambio el nombre del archivo usando un identificador único
         const splitImage = image.name.split('.');
@@ -41,9 +37,6 @@ const storeImage = (image, user = '', folder = '') =>
                 return reject(error);
             }
         });
-
-        // Guardo la imagen en la colección correspondiente del usuario
-        saveImageInBD(uid, folder, nameImgUpload);
 
         const res = 
         {
@@ -72,7 +65,7 @@ const validateFileExtension = (image) =>
 // Valido la carpeta donde se va a subir la imagen. Hago la validación en la ruta
 const validateFolder = (folder) =>
 {
-    const folderValid = ['avatar', 'album', 'post'];
+    const folderValid = ['avatar', 'album', 'photo'];
 
     if (folderValid.includes(folder.trim()))
     {
@@ -80,27 +73,6 @@ const validateFolder = (folder) =>
     } else
     {
         return false;
-    }
-}
-
-// Función para almacenar en la BD la imagen subida del usuario
-const saveImageInBD = async(uidUser, folder, image) =>
-{
-    switch (folder) {
-        case 'avatar':
-            await UserSchema.findByIdAndUpdate(uidUser, image);
-
-            break;
-        case 'album':
-            await AlbumSchema.findOneAndUpdate({uid_user: uidUser}, image);
-
-            break;
-        case 'post':
-            console.log('imagen guardada en la bd de imagenes')
-
-            break;
-        default:
-            break;
     }
 }
 

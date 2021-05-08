@@ -1,5 +1,11 @@
 const { response, request } = require("express");
+const path = require('path');
+const fs = require('fs');
+
 const { storeImage } = require("../helpers/uploadImage");
+
+const UserSchema = require("../models/userSchema");
+const AlbumSchema = require("../models/albumSchema");
 
 
 const uploadImage = async(req = request, res = response) =>
@@ -33,7 +39,36 @@ const uploadImage = async(req = request, res = response) =>
     }    
 }
 
+const getImage = async(req = request, res = response) =>
+{
+    const { folder, image, user_name } = req.params;
+        
+    let pathImage;
+
+    // Si la imagen no es la de por defecto uso la real del usuario
+    if (image !== 'default_image.jpg')
+    {
+        // Construyo la ruta de la imagen en mi API
+        pathImage = path.join(__dirname, '../uploads', user_name, folder, image);
+
+    } else
+    {
+        pathImage = path.join(__dirname, '../images', folder, image);
+    }
+
+    // Mediante FileSystem compruebo que exista la imagen
+    if (fs.existsSync(pathImage))
+    {
+        return res.sendFile(pathImage);
+    }
+        
+    res.json({
+        message: 'No existe la imagen'
+    });
+}
+
 module.exports =
 {
-    uploadImage
+    uploadImage,
+    getImage
 }
