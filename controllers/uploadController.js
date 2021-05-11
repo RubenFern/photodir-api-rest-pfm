@@ -2,11 +2,7 @@ const { response, request } = require("express");
 const path = require('path');
 const fs = require('fs');
 
-const { storeImage } = require("../helpers/uploadImage");
-
-const UserSchema = require("../models/userSchema");
-const AlbumSchema = require("../models/albumSchema");
-
+const { storeImage, removeOldImage } = require("../helpers/uploadImage");
 
 const uploadImage = async(req = request, res = response) =>
 {
@@ -19,8 +15,12 @@ const uploadImage = async(req = request, res = response) =>
     }
 
     const { image } = req.files;
+    const oldImage = req.header('oldImage');
     const user = req.user_connected; // Al validar el Token obtengo el usuario
     const { folder } = req.params;
+
+    // Elimino la imagen anterior en caso de tenerla
+    await removeOldImage(folder, user, oldImage);
 
     // Subo la imagen
     try 

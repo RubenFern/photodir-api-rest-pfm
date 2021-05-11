@@ -1,5 +1,9 @@
-const { v4: uuidv4 } = require('uuid');
 const path = require('path');
+const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
+
+const UserSchema = require("../models/userSchema");
+const AlbumSchema = require("../models/albumSchema");
 
 const storeImage = (image, user = '', folder = '') =>
 {
@@ -25,6 +29,7 @@ const storeImage = (image, user = '', folder = '') =>
         const splitImage = image.name.split('.');
         const extension = splitImage[splitImage.length - 1];
         const nameImgUpload = `${uuidv4()}.${extension}`;
+
         
         // Uno la ruta usando el path de Node
         const uploadPath = path.join(__dirname, '/../uploads/', user_name, folder, nameImgUpload); 
@@ -76,8 +81,36 @@ const validateFolder = (folder) =>
     }
 }
 
+// Elimino la imagen anterior del usuario
+const removeOldImage = async(folder, user, oldImage) =>
+{
+    let model = '';
+
+    if (folder === 'avatar')
+    {
+        model = await UserSchema.findById(user._id);
+    } else if (folder === 'album')
+    {
+        model = await AlbumSchema.findOne({uid_user: user._id, image: oldImage});
+    }
+
+    // Si la encontró la imagen significa que la editando, por lo que borro la anterior de mi API
+    if (model)
+    {
+        const { image } = model;
+        const pathOldImage = path.join(__dirname, '../uploads', user.user_name, folder, image);
+        
+        if (fs.existsSync(pathOldImage))
+        {
+            // La borro
+            fs.unlinkSync(pathOldImage);
+        }
+    }
+}
+
 module.exports =
 {
     storeImage,
-    validateFolder
+    validateFolder,
+    removeOldImage
 }
