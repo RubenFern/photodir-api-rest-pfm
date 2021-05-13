@@ -68,12 +68,27 @@ const addPhoto = async(req = request, res = response) =>
 
 const editPhoto = async(req = request, res = response) =>
 {
+    const { uid } = req.params;
+    const { title, description } = req.body;
 
+    const photo = await PhotoSchema.findByIdAndUpdate(uid, {title, description}, {new: true});
+    
+    res.json({
+        message: 'Fotografía editada',
+        photo
+    });
 }
 
 const deletePhoto = async(req = request, res = response) =>
 {
+    const { uid } = req.params;
 
+    const photo = await PhotoSchema.findByIdAndDelete(uid);
+
+    res.json({
+        message: 'Fotografía eliminada',
+        photo
+    });
 }
 
 module.exports =

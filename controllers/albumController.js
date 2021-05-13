@@ -1,4 +1,5 @@
 const {request, response} = require('express');
+const { removeOldImage } = require('../helpers/uploadImage');
 
 const userConnected = require('../helpers/userConnected');
 const albumExists = require('../helpers/validateAlbum');
@@ -86,10 +87,10 @@ const editAlbum = async(req = request, res = response) =>
     const {_id: uid_album} = await Album.findOne({name: album_name, uid_user});
     
     // Actualizo los datos del álbum
-    const album = await Album.findByIdAndUpdate(uid_album, {name: new_name, ...data});
+    const album = await Album.findByIdAndUpdate(uid_album, {name: new_name, ...data}, {new: true});
 
     res.json({
-        message: 'Edito un álbum',
+        message: 'Álbum editado',
         album
     });
 }
@@ -99,8 +100,10 @@ const deleteAlbum = async(req = request, res = response) =>
     // Compruebo que el usuario esté conectado
     userConnected(req, res)
 
-    const {_id: uid_user} = req.user_connected;
+    const user = req.user_connected;
+    const {_id: uid_user} = user;
     const {album_name} = req.params;
+    const { image } = req.body;
 
     // Compruebo que el álbum a borrar exista
     if (!await albumExists(uid_user, album_name))
@@ -108,6 +111,12 @@ const deleteAlbum = async(req = request, res = response) =>
         return res.status(401).json({
             message: 'El álbum no existe'
         });
+    }
+
+    // Elimino la imagen del álbum de la API
+    if (image !== 'default_image.jpg')
+    {
+        removeOldImage('album', user, image);
     }
 
     // Elimino el álbum
