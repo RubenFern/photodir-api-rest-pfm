@@ -94,7 +94,7 @@ const removeOldImage = async(folder, user, oldImage) =>
         model = await AlbumSchema.findOne({uid_user: user._id, image: oldImage});
     }
 
-    // Si la encontró la imagen significa que la editando, por lo que borro la anterior de mi API
+    // Si encontró la imagen significa que la ha editado, por lo que borro la anterior de mi API
     if (model)
     {
         const { image } = model;
