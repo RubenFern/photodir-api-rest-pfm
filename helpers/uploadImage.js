@@ -4,6 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const UserSchema = require("../models/userSchema");
 const AlbumSchema = require("../models/albumSchema");
+const PhotoSchema = require('../models/photoSchema');
 
 const storeImage = (image, user = '', folder = '') =>
 {
@@ -92,6 +93,9 @@ const removeOldImage = async(folder, user, oldImage) =>
     } else if (folder === 'album')
     {
         model = await AlbumSchema.findOne({uid_user: user._id, image: oldImage});
+    } else if (folder === 'photo')
+    {
+        model = await PhotoSchema.findOne({image: oldImage});
     }
 
     // Si encontró la imagen significa que la ha editado, por lo que borro la anterior de mi API

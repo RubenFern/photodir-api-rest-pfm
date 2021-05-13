@@ -2,6 +2,7 @@ const {request, response} = require('express');
 
 const userConnected = require('../helpers/userConnected');
 const albumExists = require('../helpers/validateAlbum');
+const { removeOldImage } = require('../helpers/uploadImage');
 
 const AlbumSchema = require('../models/albumSchema');
 const PhotoSchema = require('../models/photoSchema');
@@ -82,6 +83,11 @@ const editPhoto = async(req = request, res = response) =>
 const deletePhoto = async(req = request, res = response) =>
 {
     const { uid } = req.params;
+    const user = req.user_connected;
+    const { image } = req.body;
+
+    // Elimino la fotografía de la API
+    removeOldImage('photo', user, image);
 
     const photo = await PhotoSchema.findByIdAndDelete(uid);
 
