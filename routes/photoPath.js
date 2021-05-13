@@ -25,12 +25,16 @@ router.post('/:album', [
     showErros
 ], addPhoto);
 
-router.put('/:photo_name', [
-    validateJWT
+router.put('/:uid', [
+    validateJWT,
+    param('uid', 'El uid no es válido').isMongoId(),
+    showErros
 ], editPhoto);
 
-router.delete('/:photo_name', [
-    validateJWT
+router.delete('/:uid', [
+    validateJWT,
+    param('uid', 'El uid no es válido').isMongoId(),
+    showErros
 ], deletePhoto);
 
 module.exports = router;
