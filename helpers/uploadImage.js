@@ -129,6 +129,9 @@ const emptyAlbum = async(user, uid_album) =>
             fs.unlinkSync(pathImg);
         }
     }
+
+    // Elimino también la imagen de la base de datos
+    await PhotoSchema.deleteMany({uid_album}); 
 }
 
 module.exports =
