@@ -1,6 +1,6 @@
 const {request, response} = require('express');
-const { removeOldImage } = require('../helpers/uploadImage');
 
+const { removeOldImage, emptyAlbum } = require('../helpers/uploadImage');
 const userConnected = require('../helpers/userConnected');
 const albumExists = require('../helpers/validateAlbum');
 const Album = require('../models/albumSchema');
@@ -119,8 +119,12 @@ const deleteAlbum = async(req = request, res = response) =>
         removeOldImage('album', user, image);
     }
 
-    // Elimino el álbum
     const {_id: uid_album} = await Album.findOne({uid_user, name: album_name});
+
+    // Elimino todas las fotograrías que tenía el álbum
+    emptyAlbum(user, uid_album);
+
+    // Elimino el álbum
     const album = await Album.findByIdAndDelete(uid_album);
 
     res.json({

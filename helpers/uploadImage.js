@@ -112,9 +112,29 @@ const removeOldImage = async(folder, user, oldImage) =>
     }
 }
 
+// Vacio el álbum en caso de borrarlo
+const emptyAlbum = async(user, uid_album) =>
+{
+    const images = await PhotoSchema.find({uid_album});
+    let pathImg = null;
+    
+    // Recorro todas las imágenes y las elimino
+    for(let i in images) 
+    {
+        pathImg = path.join(__dirname, '../uploads', user.user_name, 'photo', images[i].image);
+        console.log(pathImg)
+
+        if (fs.existsSync(pathImg))
+        {
+            fs.unlinkSync(pathImg);
+        }
+    }
+}
+
 module.exports =
 {
     storeImage,
     validateFolder,
-    removeOldImage
+    removeOldImage,
+    emptyAlbum
 }
