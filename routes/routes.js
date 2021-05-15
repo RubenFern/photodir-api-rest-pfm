@@ -5,6 +5,7 @@ const routes = (app) =>
     app.use('/api/auth', require('./authPath'));
     app.use('/api/albumes', require('./albumPath'));
     app.use('/api/fotografias', require('./photoPath'));
+    app.use('/api/explore', require('./explorePath'));
     
     app.use('/api/upload', require('./uploadPath'));
     
