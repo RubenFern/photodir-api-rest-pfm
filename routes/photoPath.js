@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { check, param } = require("express-validator");
 
-const { viewPhotos, addPhoto, editPhoto, deletePhoto } = require("../controllers/photoController");
+const { viewPhotos, addPhoto, editPhoto, deletePhoto, viewPhoto } = require("../controllers/photoController");
 
 const validateJWT = require("../middlewares/validateJWT");
 const showErros = require("../middlewares/showErrors");
@@ -15,6 +15,11 @@ router.get('/:user_name/:album', [
     param('user_name').custom(userExists), // Los álbumes los compruebo en el controlador usando una función ya creada
     showErros
 ], viewPhotos);
+
+router.get('/:uid', [
+    param('uid', 'EL id no es válido').isMongoId(),
+    showErros
+], viewPhoto);
 
 /**
  * Uso el token para obtener el usuario conectado y así añadir el álbum en su perfil

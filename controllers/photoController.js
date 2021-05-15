@@ -29,6 +29,24 @@ const viewPhotos = async(req = request, res = response) =>
     });
 }
 
+// Función para buscar solo una imagen
+const viewPhoto = async(req = request, res = response) =>
+{
+    const { uid } = req.params;
+    const photo = await PhotoSchema.findById(uid);
+
+    if (!photo)
+    {
+        return res.status(401).json({
+            message: 'No existe imagen'
+        });
+    }
+
+    res.json({
+        photo
+    });
+}
+
 const addPhoto = async(req = request, res = response) =>
 {
     // Compruebo si el usuario está conectado
@@ -100,6 +118,7 @@ const deletePhoto = async(req = request, res = response) =>
 module.exports =
 {
     viewPhotos,
+    viewPhoto,
     addPhoto,
     editPhoto,
     deletePhoto
