@@ -16,10 +16,7 @@ router.get('/:user_name/:album', [
     showErros
 ], viewPhotos);
 
-router.get('/:uid', [
-    param('uid', 'EL id no es válido').isMongoId(),
-    showErros
-], viewPhoto);
+router.get('/:photo', viewPhoto);
 
 /**
  * Uso el token para obtener el usuario conectado y así añadir el álbum en su perfil

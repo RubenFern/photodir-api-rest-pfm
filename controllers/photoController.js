@@ -32,13 +32,13 @@ const viewPhotos = async(req = request, res = response) =>
 // Función para buscar solo una imagen
 const viewPhoto = async(req = request, res = response) =>
 {
-    const { uid } = req.params;
-    const photo = await PhotoSchema.findById(uid);
+    const { photo: image } = req.params;
+    const photo = await PhotoSchema.findOne({image});
 
     if (!photo)
     {
         return res.status(401).json({
-            message: 'No existe imagen'
+            message: 'No existe la imagen'
         });
     }
 
