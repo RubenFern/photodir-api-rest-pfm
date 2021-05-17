@@ -7,6 +7,7 @@ const { removeOldImage } = require('../helpers/uploadImage');
 const AlbumSchema = require('../models/albumSchema');
 const PhotoSchema = require('../models/photoSchema');
 const UserSchema = require('../models/userSchema');
+const LikeSchema = require('../models/likeSchema');
 
 const viewPhotos = async(req = request, res = response) =>
 {
@@ -71,13 +72,16 @@ const addPhoto = async(req = request, res = response) =>
         });
     }
 
-    const {title, description, image} = req.body;
+    const {title, description, image, location} = req.body;
     
     const { _id: uid_album } = await AlbumSchema.findOne({name: album});
 
-    const photo = new PhotoSchema({uid_album, title, description, image});
-
+    const photo = new PhotoSchema({uid_album, title, description, image, location});
     await photo.save();
+
+    // Añado la fotografía en la tabla de likes
+    const like = new LikeSchema({ uid_photo: photo._id, uid_user});
+    await like.save();
 
     res.status(201).json({
         message: 'Fotografía añadida',
@@ -88,9 +92,9 @@ const addPhoto = async(req = request, res = response) =>
 const editPhoto = async(req = request, res = response) =>
 {
     const { uid } = req.params;
-    const { title, description } = req.body;
+    const { title, description, location } = req.body;
 
-    const photo = await PhotoSchema.findByIdAndUpdate(uid, {title, description}, {new: true});
+    const photo = await PhotoSchema.findByIdAndUpdate(uid, {title, description, location}, {new: true});
     
     res.json({
         message: 'Fotografía editada',
@@ -108,6 +112,9 @@ const deletePhoto = async(req = request, res = response) =>
     removeOldImage('photo', user, image);
 
     const photo = await PhotoSchema.findByIdAndDelete(uid);
+
+    // Elimino la fotografía de la colección de likes
+    await LikeSchema.findOneAndDelete({uid_photo: uid, uid_user: user._id});
 
     res.json({
         message: 'Fotografía eliminada',

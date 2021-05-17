@@ -25,6 +25,11 @@ const PhotoSchema = Schema
         required: [true, 'Debes subir una fotografía']
     },
 
+    location:
+    {
+        type: String
+    },
+
     creation_date:
     {
         type: String,
