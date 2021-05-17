@@ -1,10 +1,26 @@
 const {request, response} = require('express');
 
-
 const userConnected = require('../helpers/userConnected');
 const LikeSchema = require('../models/likeSchema');
 const PhotoSchema = require('../models/photoSchema');
 
+const viewLikes = async(req = request, res = response) =>
+{
+    const { uid_photo } = req.params;
+
+    const { likes } = await LikeSchema.findOne({uid_photo});
+
+    if (!likes)
+    {
+        return res.json({
+            message: 'No existe la imagen' 
+        });
+    }
+
+    res.json({
+        likes
+    });
+}
 
 const addLike = async(req = request, res = response) =>
 {
@@ -45,6 +61,7 @@ const removeLike = async(req = request, res = response) =>
 
 module.exports = 
 {
+    viewLikes,
     addLike,
     removeLike
 }
