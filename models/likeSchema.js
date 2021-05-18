@@ -9,11 +9,12 @@ const LikeSchema = Schema
         required: [true, 'Se necesita una imagen']
     },
 
-    uid_user:
+    // Me permitirá contar los likes totales de los álbumes
+    uid_album:
     {
         type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: [true, 'Se debe asociar a un usuario']
+        ref: 'Album',
+        required: [true, 'Se debe asociar a un álbum']
     },
 
     likes:

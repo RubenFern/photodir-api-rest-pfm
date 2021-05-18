@@ -1,12 +1,12 @@
 const {request, response} = require('express');
 
-const userConnected = require('../helpers/userConnected');
 const LikeSchema = require('../models/likeSchema');
 const PhotoSchema = require('../models/photoSchema');
 
 const viewLikes = async(req = request, res = response) =>
 {
-    const { uid_photo } = req.params;
+    const { image } = req.params;
+    const { _id: uid_photo } = await PhotoSchema.findOne({image});
 
     const { likes } = await LikeSchema.findOne({uid_photo});
 
@@ -24,15 +24,11 @@ const viewLikes = async(req = request, res = response) =>
 
 const addLike = async(req = request, res = response) =>
 {
-    userConnected(req, res);
-
     // Recojo el nombre de la imagen para obtener el uid porque en la PhotoUserPage no recojo el uid de las imágenes. Y el número de like actual
-    const { image } = req.body;
-    const { _id: uid_photo } = await PhotoSchema.findOne({image});
-    const {_id: uid_user } = req.user_connected;
+    const { uid_photo } = req.params;
 
     // Incremento en 1 los likes de la fotografía
-    const { _id: uid } = await LikeSchema.findOne({ uid_photo, uid_user });
+    const { _id: uid } = await LikeSchema.findOne({ uid_photo });
     const { likes } = await LikeSchema.findByIdAndUpdate(uid, { $inc: { 'likes': 1 } }, {new: true});
 
     res.json({
@@ -43,14 +39,10 @@ const addLike = async(req = request, res = response) =>
 
 const removeLike = async(req = request, res = response) =>
 {
-    userConnected(req, res);
-
-    const { image } = req.body;
-    const { _id: uid_photo } = await PhotoSchema.findOne({image});
-    const {_id: uid_user } = req.user_connected;
+    const { uid_photo } = req.params;
 
     // Decremento en 1 los likes de la fotografía
-    const { _id: uid } = await LikeSchema.findOne({ uid_photo, uid_user });
+    const { _id: uid } = await LikeSchema.findOne({ uid_photo });
     const { likes } = await LikeSchema.findByIdAndUpdate(uid, { $inc: { 'likes': -1 } }, {new: true});
 
     res.json({

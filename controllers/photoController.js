@@ -80,7 +80,7 @@ const addPhoto = async(req = request, res = response) =>
     await photo.save();
 
     // Añado la fotografía en la tabla de likes
-    const like = new LikeSchema({ uid_photo: photo._id, uid_user});
+    const like = new LikeSchema({ uid_photo: photo._id, uid_album});
     await like.save();
 
     res.status(201).json({
@@ -114,7 +114,7 @@ const deletePhoto = async(req = request, res = response) =>
     const photo = await PhotoSchema.findByIdAndDelete(uid);
 
     // Elimino la fotografía de la colección de likes
-    await LikeSchema.findOneAndDelete({uid_photo: uid, uid_user: user._id});
+    await LikeSchema.findOneAndDelete({uid_photo: uid});
 
     res.json({
         message: 'Fotografía eliminada',
