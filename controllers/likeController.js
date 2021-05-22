@@ -3,20 +3,14 @@ const {request, response} = require('express');
 const LikeSchema = require('../models/likeSchema');
 const PhotoSchema = require('../models/photoSchema');
 
-const viewLikes = async(req = request, res = response) =>
+const getLikes = async(req = request, res = response) =>
 {
     const { image } = req.params;
-    const { _id: uid_photo } = await PhotoSchema.findOne({image});
+    const { _id: uid_photo }   = await PhotoSchema.findOne({image}); 
 
-    const { likes } = await LikeSchema.findOne({uid_photo});
-
-    if (!likes)
-    {
-        return res.json({
-            message: 'No existe la imagen' 
-        });
-    }
-
+    // Cuento el número de registro de esa imagen, sino no existe en la colección devuelve 0 Likes
+    const likes = await LikeSchema.countDocuments({uid_photo});
+    
     res.json({
         likes
     });
@@ -24,36 +18,51 @@ const viewLikes = async(req = request, res = response) =>
 
 const addLike = async(req = request, res = response) =>
 {
-    // Recojo el nombre de la imagen para obtener el uid porque en la PhotoUserPage no recojo el uid de las imágenes. Y el número de like actual
-    const { uid_photo } = req.params;
+    // Obtengo el nombre de la imagen
+    const { image } = req.body;
 
-    // Incremento en 1 los likes de la fotografía
-    const { _id: uid } = await LikeSchema.findOne({ uid_photo });
-    const { likes } = await LikeSchema.findByIdAndUpdate(uid, { $inc: { 'likes': 1 } }, {new: true});
+    // Obtengo los uid del álbum, photo y usuario
+    const {_id: uid_user_liked } = req.user_connected;
+    const { _id: uid_photo, uid_album } = await PhotoSchema.findOne({ image });
+
+    // Compruebo que el usuario no haya dado Like antes a la misma photo
+    const existLike = await LikeSchema.findOne({ uid_user_liked, uid_photo });
+
+    if(existLike)
+    {
+        return res.json({
+            message: 'Ya has dado Like'
+        });
+    }
+
+    // Añado en la colección de likes la misma imagen y el usuario que dió Like
+    const like = new LikeSchema({ uid_photo, uid_album, uid_user_liked });
+    await like.save();
 
     res.json({
-        message: 'Has dado like a la imagen',
-        likes
+        message: 'Has dado like a la imagen'
     });
 }
 
 const removeLike = async(req = request, res = response) =>
 {
-    const { uid_photo } = req.params;
+    const { image } = req.body;
 
-    // Decremento en 1 los likes de la fotografía
-    const { _id: uid } = await LikeSchema.findOne({ uid_photo });
-    const { likes } = await LikeSchema.findByIdAndUpdate(uid, { $inc: { 'likes': -1 } }, {new: true});
+    // Obtengo el uid de la photo y del usuario
+    const { _id: uid_photo } = await PhotoSchema.findOne({ image });
+    const {_id: uid_user_liked } = req.user_connected;
+    
+    // Elimino el Like de la colección
+    await LikeSchema.findOneAndDelete({ uid_photo, uid_user_liked });
 
     res.json({
-        message: 'Has quitado el like a la imagen',
-        likes
+        message: 'Has quitado el like a la imagen'
     });
 }
 
 module.exports = 
 {
-    viewLikes,
+    getLikes,
     addLike,
     removeLike
 }

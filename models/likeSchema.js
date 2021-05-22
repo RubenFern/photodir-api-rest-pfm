@@ -17,10 +17,11 @@ const LikeSchema = Schema
         required: [true, 'Se debe asociar a un álbum']
     },
 
-    likes:
+    uid_user_liked:
     {
-        type: Number,
-        default: 0
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, 'El like se debe asociar a un usuario']
     },
 });
 

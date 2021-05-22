@@ -3,26 +3,30 @@ const { check, param } = require("express-validator");
 
 const validateJWT = require("../middlewares/validateJWT");
 
-const { addLike, removeLike, viewLikes } = require("../controllers/likeController");
+const { addLike, removeLike, getLikes } = require("../controllers/likeController");
 const showErros = require("../middlewares/showErrors");
+const { photoExists } = require("../helpers/validatePhoto");
 
 
 const router = Router();
 
-router.get('/viewlikes/:image', [
-    check('image', 'Debes seleccionar una imagen').notEmpty(),
+router.get('/:image', [
+    param('image', 'Debes seleccionar una imagen').notEmpty(),
+    param('image').custom(photoExists),
     showErros
-], viewLikes);
+], getLikes);
 
-router.get('/addlike/:uid_photo', [
+router.post('/addlike', [
     validateJWT,
-    param('uid_photo', 'El id de la imagen no es válido').isMongoId(),
+    check('image', 'Debes especificar el nombre de la imagen a dar like').notEmpty(),
+    check('image').custom(photoExists),
     showErros
 ], addLike);
 
-router.get('/removelike/:uid_photo', [
+router.post('/removelike', [
     validateJWT,
-    param('uid_photo', 'El id de la imagen no es válido').isMongoId(),
+    check('image', 'Debes especificar el nombre de la imagen a dar like').notEmpty(),
+    check('image').custom(photoExists),
     showErros
 ], removeLike);
 
