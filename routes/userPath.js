@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { check } = require("express-validator");
+const { check, param } = require("express-validator");
 
 // Llamo a la función de validación
 const { emailExists, userExists, userNameExists } = require("../helpers/validateUser");
@@ -12,11 +12,11 @@ const {viewUser, addUser, editUser, deleteUser} = require('../controllers/userCo
 const router = Router();
 
 router.get('/:user_name', [
-    check('user_name').custom(userExists),
+    param('user_name').custom(userExists),
     showErros
 ], viewUser);
 
-router.post('/registro', [
+router.post('/', [
     check('user_name').custom(userNameExists),
     check('name', 'El nombre es obligatorio').notEmpty(),
     check('email', 'El correo electrónico es obligatorio').notEmpty(),
@@ -27,7 +27,7 @@ router.post('/registro', [
 ], addUser);
 
 // Llamo a la función que me valida el token, si el usuario que se conecta lo tiene obtengo su uid
-router.put('/editar-perfil', [
+router.put('/', [
     validateJWT,
     check('password', 'La contraseña debe tener al menos 6 caracteres').optional().isLength({min: 6}),
     showErros
@@ -36,7 +36,7 @@ router.put('/editar-perfil', [
 //router.patch('/:id', editUser);
 
 // Protejo la ruta eliminar con la validación de token. *Todas las funciones dentro de la ruta comparten el mismo request*
-router.delete('/eliminar-cuenta', [
+router.delete('/', [
     validateJWT
 ], deleteUser);
 
