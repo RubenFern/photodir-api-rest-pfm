@@ -122,7 +122,6 @@ const emptyAlbum = async(user, uid_album) =>
     for(let i in images) 
     {
         pathImg = path.join(__dirname, '../uploads', user.user_name, 'photo', images[i].image);
-        console.log(pathImg)
 
         if (fs.existsSync(pathImg))
         {

@@ -1,4 +1,5 @@
 const AlbumSchema = require("../models/albumSchema");
+const PhotoSchema = require("../models/photoSchema");
 
 const albumExists = async(album) =>
 {
@@ -10,7 +11,18 @@ const albumExists = async(album) =>
     }
 }
 
+const photoExists = async(image) =>
+{
+    const photo = await PhotoSchema.findOne({ image });
+
+    if (!photo)
+    {
+        throw new Error('La imagen no existe');
+    }
+}
+
 module.exports =
 {
-    albumExists
+    albumExists,
+    photoExists
 }
