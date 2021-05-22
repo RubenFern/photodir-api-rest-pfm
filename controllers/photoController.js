@@ -79,10 +79,6 @@ const addPhoto = async(req = request, res = response) =>
     const photo = new PhotoSchema({uid_album, title, description, image, location});
     await photo.save();
 
-    // Añado la fotografía en la tabla de likes
-    const like = new LikeSchema({ uid_photo: photo._id, uid_album});
-    await like.save();
-
     res.status(201).json({
         message: 'Fotografía añadida',
         photo

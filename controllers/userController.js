@@ -53,7 +53,7 @@ const editUser = async(req = request, res = response) =>
         hashPassword(data, password);
     }
 
-    const user = await User.findByIdAndUpdate(uid, data);
+    const user = await User.findByIdAndUpdate(uid, data, { new: true });
 
     res.json({
         message: 'El usuario ha sido editado',
@@ -74,6 +74,9 @@ const deleteUser = async(req = request, res = response) =>
 
     // Añado el token en la lista negra
     deleteJWT(req, res);
+
+    // Elimino todos los álbumes y sus fotografías
+    //emptyAlbum();
 
     res.json({
         message: 'El usuario se ha eliminado',
