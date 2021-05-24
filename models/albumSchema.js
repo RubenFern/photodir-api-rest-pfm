@@ -18,6 +18,7 @@ const AlbumSchema = Schema
     description: 
     {
         type: String,
+        maxlength: 205
     },
 
     image:

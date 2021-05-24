@@ -60,9 +60,32 @@ const removeLike = async(req = request, res = response) =>
     });
 }
 
+const checkLike = async(req = request, res = response) =>
+{
+    const { image } = req.body;
+
+    const { _id: uid_photo } = await PhotoSchema.findOne({ image });
+    const {_id: uid_user_liked } = req.user_connected;
+
+    // Si existe en la colección significa que el usuario le dió like
+    const likeExists = await LikeSchema.findOne({ uid_photo, uid_user_liked });
+
+    if (!likeExists)
+    {
+        return res.json({
+            likeExists: false
+        });
+    }
+
+    res.json({
+        likeExists: true
+    });
+}
+
 module.exports = 
 {
     getLikes,
     addLike,
-    removeLike
+    removeLike,
+    checkLike
 }

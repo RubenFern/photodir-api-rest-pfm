@@ -63,8 +63,7 @@ const editUser = async(req = request, res = response) =>
 
     res.json({
         message: 'El usuario ha sido editado',
-        user,
-        uid
+        user
     });
 };
 

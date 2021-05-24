@@ -3,7 +3,7 @@ const { check, param } = require("express-validator");
 
 const validateJWT = require("../middlewares/validateJWT");
 
-const { addLike, removeLike, getLikes } = require("../controllers/likeController");
+const { addLike, removeLike, getLikes, checkLike } = require("../controllers/likeController");
 const showErros = require("../middlewares/showErrors");
 const { photoExists } = require("../helpers/validatePhoto");
 
@@ -15,6 +15,13 @@ router.get('/:image', [
     param('image').custom(photoExists),
     showErros
 ], getLikes);
+
+router.post('/checklike', [
+    validateJWT,
+    check('image', 'Debes especificar el nombre de la imagen a dar like').notEmpty(),
+    check('image').custom(photoExists),
+    showErros
+], checkLike);
 
 router.post('/addlike', [
     validateJWT,
