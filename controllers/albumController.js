@@ -12,12 +12,10 @@ const viewAlbums = async(req = request, res = response) =>
 
     const uid_user = await User.find({user_name});
     const albums = await Album.find({uid_user});
-    /*const albums = await Album.aggregate([{
-        $lookup: {from: 'users', localField: 'uid_user', foreignField: '_id', as: user_name}
-    }]);*/
 
     res.json({
         user_name,
+        success: true,
         albums
     });
 }
@@ -41,8 +39,8 @@ const addAlbum = async(req = request, res = response) =>
     // Compruebo que el usuario no tenga otro álbum igual
     if (await albumExists(uid_user, name))
     {
-        return res.status(401).json({
-            message: `Ya tienes creado el álbum de ${name}`
+        return res.json({
+            message: `Ya tienes creado un álbum con el nombre "${name}"`
         });
     }
 
@@ -50,8 +48,9 @@ const addAlbum = async(req = request, res = response) =>
 
     await album.save();
 
-    res.status(201).json({
+    res.json({
         message: 'Álbum creado',
+        success: true,
         album
     });
 }
@@ -70,7 +69,7 @@ const editAlbum = async(req = request, res = response) =>
     // Compruebo que el álbum a editar exista
     if (!await albumExists(uid_user, album_name))
     {
-        return res.status(401).json({
+        return res.json({
             message: 'El álbum no existe'
         });
     }
@@ -91,6 +90,7 @@ const editAlbum = async(req = request, res = response) =>
 
     res.json({
         message: 'Álbum editado',
+        success: true,
         album
     });
 }
@@ -108,7 +108,7 @@ const deleteAlbum = async(req = request, res = response) =>
     // Compruebo que el álbum a borrar exista
     if (!await albumExists(uid_user, album_name))
     {
-        return res.status(401).json({
+        return res.json({
             message: 'El álbum no existe'
         });
     }
@@ -129,6 +129,7 @@ const deleteAlbum = async(req = request, res = response) =>
 
     res.json({
         message: 'Elimino un álbum',
+        success: true,
         album
     });
 }
