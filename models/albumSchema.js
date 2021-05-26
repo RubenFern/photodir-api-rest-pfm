@@ -33,8 +33,9 @@ const AlbumSchema = Schema
         default: () =>
         {
             const date = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
-            return date.toLocaleString();
+            return date.toLocaleString('es-ES', options);
         }
     }
 });
