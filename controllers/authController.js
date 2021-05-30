@@ -23,7 +23,7 @@ const login = async(req = request, res = response) =>
             });
         }
 
-        // Compruebo la contraseña usando la password recibida en el body con la del usuario que busqué con el email
+        // Compruebo la contraseña usando la password recibida en el body con la del usuario
         const validPassword = bcryptjs.compareSync(password, user.password);
 
         if (!validPassword)
