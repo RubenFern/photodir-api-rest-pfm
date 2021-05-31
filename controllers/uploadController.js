@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 const { storeImage, removeOldImage } = require("../helpers/uploadImage");
+const UserSchema = require("../models/userSchema");
 
 const uploadImage = async(req = request, res = response) =>
 {
@@ -42,19 +43,20 @@ const uploadImage = async(req = request, res = response) =>
 const getImage = async(req = request, res = response) =>
 {
     const { folder, image, user_name } = req.params;
-        
-    let pathImage;
+
+    // Compruebo si el perfil es privado 
+    const { private_profile } = await UserSchema.findOne({ user_name });
+
+    // Si es perfil es privado no muestro las imágenes
+    if (private_profile)
+    {
+        return res.json({
+            message: 'No tienen permisos para visualizar esta imagen'
+        });
+    }
 
     // Si la imagen no es la de por defecto uso la real del usuario
-    if (image !== 'default_image.jpg')
-    {
-        // Construyo la ruta de la imagen en mi API
-        pathImage = path.join(__dirname, '../uploads', user_name, folder, image);
-
-    } else
-    {
-        pathImage = path.join(__dirname, '../images', folder, image);
-    }
+    const pathImage = getPathImage(folder, user_name, image);
 
     // Mediante FileSystem compruebo que exista la imagen
     if (fs.existsSync(pathImage))
@@ -67,8 +69,60 @@ const getImage = async(req = request, res = response) =>
     });
 }
 
+// Ruta para las imágenes del home en caso de que el usuario conectado tenga el perfil privado
+const getImageToken = async(req = request, res = response) =>
+{
+    const { folder, image } = req.params;
+    const { user_name } = req.user_connected;
+    
+    const pathImage = getPathImage(folder, user_name, image);
+
+    // Mediante FileSystem compruebo que exista la imagen
+    if (fs.existsSync(pathImage))
+    {
+        return res.sendFile(pathImage);
+    }
+        
+    res.json({
+        message: 'No existe la imagen'
+    });
+}
+
+const getAvatar = async(req = request, res = response) =>
+{
+    const { image, user_name } = req.params;
+
+    const pathImage = getPathImage('avatar', user_name, image);
+    
+
+    // Mediante FileSystem compruebo que exista la imagen
+    if (fs.existsSync(pathImage))
+    {
+        return res.sendFile(pathImage);
+    }
+        
+    res.json({
+        message: 'No existe la imagen'
+    });
+}
+
+const getPathImage = (folder, user_name, image) =>
+{
+    if (image !== 'default_image.jpg')
+    {
+        // Construyo la ruta de la imagen en mi API
+        return path.join(__dirname, '../uploads', user_name, folder, image);
+
+    } else
+    {
+        return path.join(__dirname, '../images', folder, image);
+    }
+}
+
 module.exports =
 {
     uploadImage,
-    getImage
+    getImage,
+    getImageToken,
+    getAvatar
 }

@@ -40,6 +40,12 @@ const UserSchema = Schema
         default: false
     },
 
+    private_profile:
+    {
+        type: Boolean,
+        default: true
+    },
+
     creation_date:
     {
         type: String,
