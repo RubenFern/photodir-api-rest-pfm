@@ -1,7 +1,6 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
 
-// Llamo a la función de validación
 const { userExists } = require("../helpers/validateUser");
 const showErros = require('./../middlewares/showErrors');
 

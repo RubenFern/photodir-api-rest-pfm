@@ -16,7 +16,7 @@ const viewUser = async(req = request, res = response) =>
     // Recojo el usuario por la URL
     const {user_name} = req.params;
 
-    const user = await User.find({user_name}).select('name user_name image creation_date -_id');
+    const user = await User.findOne({user_name}).select('name user_name image creation_date private_profile -_id');
 
     res.json({
         user

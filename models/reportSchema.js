@@ -3,14 +3,14 @@ const {Schema, model} = require('mongoose');
 const ReportSchema = Schema
 ({
     // uid de la imagen reportada
-    uid_reported:
+    uid_image_reported:
     {
         type: Schema.Types.ObjectId,
         required: [true, 'Debes introducir el uid de la imagen reportada']
     },
 
     // nombre de la imagen reportada
-    image_reported:
+    name_image_reported:
     {
         type: String,
         required: [true, 'Debes introducir la imagen a reportar']
