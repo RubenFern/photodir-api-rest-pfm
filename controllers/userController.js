@@ -50,13 +50,21 @@ const editUser = async(req = request, res = response) =>
     // Guardo el uid del usuario conectado
     const {_id: uid} = req.user_connected;
     // Desestructuro los campos que no quiero editar para guardar los que sí y la contraseña para su cifrado
-    const {_id, password, email, user_name, ...data} = req.body;
-
+    const {_id, password, email, user_name, is_admin, ...data} = req.body;
+console.log(data)
     // Si introdujo una nueva contraseña la hasheo y la añado en el data
     if (password)
     {
         // Añado la contraseña al data que contiene los campos a editar
         hashPassword(data, password);
+    }
+
+    // Si no existen datos que editar cancelo el proceso
+    if (!Object.keys(data).length)
+    {
+        return res.json({
+            message: 'No ha editado ningún dato'
+        })
     }
 
     const user = await User.findByIdAndUpdate(uid, data, { new: true });
