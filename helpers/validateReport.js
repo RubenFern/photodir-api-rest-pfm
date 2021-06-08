@@ -1,4 +1,4 @@
-const ReportSchema = require("../models/ReportSchema");
+const ReportSchema = require("../models/reportSchema");
 
 
 const reportExists = async(uid_reported) =>

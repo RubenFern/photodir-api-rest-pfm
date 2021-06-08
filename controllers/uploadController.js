@@ -1,7 +1,7 @@
 const { response, request } = require("express");
-const path = require('path');
 const fs = require('fs');
 
+const { getPathImage } = require("../helpers/getPathImage");
 const { storeImage, removeOldImage } = require("../helpers/uploadImage");
 const UserSchema = require("../models/userSchema");
 
@@ -51,7 +51,7 @@ const getImage = async(req = request, res = response) =>
     if (private_profile)
     {
         return res.json({
-            message: 'No tienen permisos para visualizar esta imagen'
+            message: 'No tienes permisos para visualizar esta imagen'
         });
     }
 
@@ -104,19 +104,6 @@ const getAvatar = async(req = request, res = response) =>
     res.json({
         message: 'No existe la imagen'
     });
-}
-
-const getPathImage = (folder, user_name, image) =>
-{
-    if (image !== 'default_image.jpg')
-    {
-        // Construyo la ruta de la imagen en mi API
-        return path.join(__dirname, '../uploads', user_name, folder, image);
-
-    } else
-    {
-        return path.join(__dirname, '../images', folder, image);
-    }
 }
 
 module.exports =

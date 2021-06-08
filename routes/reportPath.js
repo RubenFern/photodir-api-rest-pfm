@@ -9,7 +9,6 @@ const showErros = require("../middlewares/showErrors");
 const { addReport, viewReports, editReport } = require("../controllers/reportController");
 
 const { userExists } = require("../helpers/validateUser");
-const { photoExists } = require("../helpers/validatePhoto");
 const { reportExists } = require("../helpers/validateReport");
 
 const router = Router();
@@ -24,7 +23,6 @@ router.post('/', [
     validateJWT,
     check('user_reported').custom(userExists),
     check('reporting_user').custom(userExists),
-    check('image').custom(photoExists),
     check('description', 'Debes indicar el motivo del reporte').notEmpty(),
     check('category', 'Debes seleccionar una categoría válida [user, album, photo]').custom( (option) => ['avatar', 'album', 'photo'].includes(option)),
     showErros

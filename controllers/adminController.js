@@ -1,13 +1,15 @@
 const {request, response} = require('express');
+const fs = require('fs');
 
 const UserSchema = require('../models/userSchema');
-const AlbumSchema = require('../models/albumSchema');
+
+const { getPathImage } = require('../helpers/getPathImage');
 
 
 const viewUsers = async(req = request, res = response) =>
 {
     const user = await UserSchema.find();
-    let users = [];
+    /*let users = [];
 
     // Añado el número de álbumes 
     for(let i in user) 
@@ -18,10 +20,10 @@ const viewUsers = async(req = request, res = response) =>
         user[i].albums = numAlbums;
         
         users.push({user: user[i], numAlbums});
-    }
+    }*/
 
     res.json({
-        users
+        user
     });
 }
 
@@ -47,7 +49,25 @@ const setRoleAdmin = async(req = request, res = response) =>
     });
 }
 
+// Devuelvo las imágenes de cualquier usuario teng ael perfil público o privado
+const getImageFromUser = async(req = request, res = response) =>
+{
+    const { user_name, category, image } = req.params;
+
+    const pathImage = getPathImage(category, user_name, image);
+    
+    if (fs.existsSync(pathImage))
+    {
+        return res.sendFile(pathImage);
+    }
+        
+    res.json({
+        message: 'No existe la imagen'
+    });
+}
+
 module.exports = {  
     viewUsers,
-    setRoleAdmin
+    setRoleAdmin,
+    getImageFromUser
 }
