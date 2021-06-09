@@ -9,18 +9,6 @@ const { getPathImage } = require('../helpers/getPathImage');
 const viewUsers = async(req = request, res = response) =>
 {
     const user = await UserSchema.find();
-    /*let users = [];
-
-    // Añado el número de álbumes 
-    for(let i in user) 
-    {
-        const numAlbums = await AlbumSchema.where({uid_user: user[i]._id}).countDocuments();
-
-        // Retorno el número de álbumes del usuario
-        user[i].albums = numAlbums;
-        
-        users.push({user: user[i], numAlbums});
-    }*/
 
     res.json({
         user
@@ -49,7 +37,7 @@ const setRoleAdmin = async(req = request, res = response) =>
     });
 }
 
-// Devuelvo las imágenes de cualquier usuario teng ael perfil público o privado
+// Devuelvo las imágenes de cualquier usuario tenga el perfil público o privado
 const getImageFromUser = async(req = request, res = response) =>
 {
     const { user_name, category, image } = req.params;

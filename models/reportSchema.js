@@ -33,7 +33,8 @@ const ReportSchema = Schema
     description:
     {
         type: String,
-        required: [true, 'Debes indicar el motivo del reporte']
+        required: [true, 'Debes indicar el motivo del reporte'],
+        maxlength: 165
     },
 
     category:

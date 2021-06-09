@@ -22,7 +22,7 @@ const addReport = async(req = request, res = response) =>
     const { user_reported, reporting_user, image, description, category } = req.body;
     let uid_image_reported = null;
 
-    if (category === 'user')
+    if (category === 'avatar')
     {
         const { _id } = await UserSchema.findOne({ image });
         uid_image_reported = _id;
@@ -30,7 +30,7 @@ const addReport = async(req = request, res = response) =>
     {
         const { _id } = await AlbumSchema.findOne({ image });
         uid_image_reported = _id;
-    } else
+    } else if (category === 'photo')
     {
         const { _id } = await PhotoSchema.findOne({ image });
         uid_image_reported = _id;
@@ -39,7 +39,7 @@ const addReport = async(req = request, res = response) =>
     if (!uid_image_reported)
     {
         return res.status(401).json({
-            message: 'La imagen no existe'
+            error: 'La imagen no existe'
         });
     }
    
