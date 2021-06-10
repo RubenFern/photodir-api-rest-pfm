@@ -51,7 +51,7 @@ const editUser = async(req = request, res = response) =>
     const {_id: uid} = req.user_connected;
     // Desestructuro los campos que no quiero editar para guardar los que sí y la contraseña para su cifrado
     const {_id, password, email, user_name, is_admin, ...data} = req.body;
-console.log(data)
+
     // Si introdujo una nueva contraseña la hasheo y la añado en el data
     if (password)
     {
