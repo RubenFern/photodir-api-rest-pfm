@@ -8,6 +8,7 @@ const PhotoSchema = require('../models/photoSchema');
 const LikeSchema = require('../models/likeSchema');
 
 const { getPathImage } = require('../helpers/getPathImage');
+const albumExists = require('../helpers/validateAlbum');
 
 const viewUsers = async(req = request, res = response) =>
 {
@@ -15,6 +16,52 @@ const viewUsers = async(req = request, res = response) =>
 
     res.json({
         users
+    });
+}
+
+const viewUser = async(req = request, res = response) =>
+{
+    const { user_name } = req.params;
+
+    const user = await UserSchema.findOne({user_name});
+
+    res.json({
+        user
+    });
+}
+
+const viewAlbums = async(req = request, res = response) =>
+{
+    const { user_name } = req.params;
+
+    const uid_user = await UserSchema.find({user_name});
+    const albums = await AlbumSchema.find({uid_user});
+
+    res.json({
+        user_name,
+        success: true,
+        albums
+    });
+}
+
+const viewPhotos = async(req = request, res = response) =>
+{
+    const { user_name, album } = req.params;
+    const { _id: uid_user } = await UserSchema.findOne({user_name});
+
+    // Compruebo que exista el álbum del usuario
+    if (!await albumExists(uid_user, album))
+    {
+        return res.status(401).json({
+            message: 'El álbum no existe'
+        });
+    }
+
+    const { _id: uid_album } = await AlbumSchema.findOne({uid_user, name: album});
+    const photos = await PhotoSchema.find({uid_album});
+
+    res.json({
+        photos
     });
 }
 
@@ -52,6 +99,48 @@ const deleteUser = async(req = request, res = response) =>
 
     res.json({
         message: `El usuario ${user_name} ha sido eliminado`
+    });
+}
+
+const deleteAlbum = async(req = request, res = response) =>
+{
+
+}
+
+const deletePhoto = async(req = request, res = response) =>
+{
+    const { image } = req.params;
+    const { user_name, album } = req.body;
+
+    // Compruebo que el álbum contenga dicha imagen
+    const { _id: uid } = await AlbumSchema.findOne({ name: album });
+    const imageExists = await PhotoSchema.findOne({ uid_album: uid, image });
+
+    if (!imageExists)
+    {
+        return res.json({
+            message: 'La imagen no existe'
+        });
+    }
+
+    const pathImage = path.join(__dirname, '../uploads', user_name, 'photo', image);
+
+    // Borro la imagen de la API
+    if (fs.existsSync(pathImage))
+    {
+        fs.rmdirSync(pathImage);
+    }
+
+    const { _id: uid_photo } = imageExists;
+
+    const photo = await PhotoSchema.findByIdAndDelete(uid_photo);
+
+    // Elimino la fotografía de la colección de likes
+    await LikeSchema.findOneAndDelete({uid_photo});
+
+    res.json({
+        message: 'Fotografía eliminada',
+        photo
     });
 }
 
@@ -105,7 +194,12 @@ const getImageFromUser = async(req = request, res = response) =>
 
 module.exports = {  
     viewUsers,
+    viewUser,
+    viewAlbums,
+    viewPhotos,
     setRoleAdmin,
     getImageFromUser,
-    deleteUser
+    deleteUser,
+    deleteAlbum,
+    deletePhoto
 }

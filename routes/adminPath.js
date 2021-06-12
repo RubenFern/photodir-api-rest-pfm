@@ -1,7 +1,8 @@
 const { Router } = require("express");
 const { check, param } = require("express-validator");
 
-const { viewUsers, setRoleAdmin, getImageFromUser, deleteUser } = require("../controllers/adminController");
+const { viewUsers, setRoleAdmin, getImageFromUser, deleteUser, viewAlbums, viewUser, viewPhotos, deletePhoto } = require("../controllers/adminController");
+const { albumExists } = require("../helpers/validatePhoto");
 const { userExists } = require("../helpers/validateUser");
 
 const isAdmin = require("../middlewares/isAdmin");
@@ -14,6 +15,28 @@ router.get('/users', [
     validateJWT,
     isAdmin
 ], viewUsers);
+
+router.get('/user/:user_name', [
+    validateJWT,
+    isAdmin,
+    param('user_name').custom(userExists),
+    showErros
+], viewUser);
+
+router.get('/albums/:user_name', [
+    validateJWT,
+    isAdmin,
+    param('user_name').custom(userExists),
+    showErros
+], viewAlbums);
+
+router.get('/photos/:user_name/:album', [
+    validateJWT,
+    isAdmin,
+    param('user_name').custom(userExists),
+    param('album').custom(albumExists),
+    showErros
+], viewPhotos);
 
 router.put('/setadmin', [
     validateJWT,
@@ -36,5 +59,13 @@ router.delete('/', [
     check('user_name').custom(userExists),
     showErros
 ], deleteUser);
+
+
+router.delete('/photo/:image', [
+    validateJWT,
+    isAdmin,
+    param('image', 'Debes añadir una imagen').notEmpty(),
+    showErros
+], deletePhoto);
 
 module.exports = router;

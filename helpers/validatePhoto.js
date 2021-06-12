@@ -3,11 +3,11 @@ const PhotoSchema = require("../models/photoSchema");
 
 const albumExists = async(album) =>
 {
-    const existeUsuario = await AlbumSchema.findOne({album});
+    const res = await AlbumSchema.findOne({name: album});
 
-    if (!existeUsuario)
+    if (!res)
     {
-        throw new Error('El usuario no existe');
+        throw new Error('El álbum no existe');
     }
 }
 
