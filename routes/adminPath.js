@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { check, param } = require("express-validator");
 
-const { viewUsers, setRoleAdmin, getImageFromUser, deleteUser, viewAlbums, viewUser, viewPhotos, deletePhoto } = require("../controllers/adminController");
+const { viewUsers, setRoleAdmin, getImageFromUser, deleteUser, viewAlbums, viewUser, viewPhotos, deletePhoto, deleteAlbum } = require("../controllers/adminController");
 const { albumExists } = require("../helpers/validatePhoto");
 const { userExists } = require("../helpers/validateUser");
 
@@ -60,11 +60,21 @@ router.delete('/', [
     showErros
 ], deleteUser);
 
+router.delete('/album/:album', [
+    validateJWT,
+    isAdmin,
+    param('album').custom(albumExists),
+    check('user_name').custom(userExists),
+    check('image', 'Debes añadir una imagen').notEmpty(),
+    showErros
+], deleteAlbum);
 
 router.delete('/photo/:image', [
     validateJWT,
     isAdmin,
     param('image', 'Debes añadir una imagen').notEmpty(),
+    check('user_name').custom(userExists),
+    check('album').custom(albumExists),
     showErros
 ], deletePhoto);
 

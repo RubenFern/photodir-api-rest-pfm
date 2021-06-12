@@ -9,6 +9,7 @@ const LikeSchema = require('../models/likeSchema');
 
 const { getPathImage } = require('../helpers/getPathImage');
 const albumExists = require('../helpers/validateAlbum');
+const { emptyAlbum } = require('../helpers/uploadImage');
 
 const viewUsers = async(req = request, res = response) =>
 {
@@ -69,6 +70,13 @@ const deleteUser = async(req = request, res = response) =>
 {
     const { user_name } = req.body;
 
+    if (user_name === 'admin')
+    {
+        return res.status(401).json({
+            message: 'Este usuario no se puede borrar'
+        });
+    }
+
     // Borro la carpeta raíz del usuario y ya borra todo su contenido
     const pathData = path.join(__dirname, '../uploads', user_name);
 
@@ -104,7 +112,46 @@ const deleteUser = async(req = request, res = response) =>
 
 const deleteAlbum = async(req = request, res = response) =>
 {
+    const { album } = req.params;
+    const { user_name, image } = req.body;
 
+    // Obtengo el usuario y uso la función para eliminar todas las imágenes del álbum
+    const user = await UserSchema.findOne({ user_name });
+
+    const { _id: uid_user } = user;
+
+    // Compruebo que el álbum sea del usuario
+    if (!await albumExists(uid_user, album))
+    {
+        return res.json({
+            message: 'El álbum no existe'
+        });
+    }
+
+    // Elimino la imagen del álbum si no es la de por defecto
+    if (image !== 'default_image.jpg')
+    {
+        const pathImage = path.join(__dirname, '../uploads', user_name, 'album', image);
+
+        if (fs.existsSync(pathImage))
+        {
+            fs.unlinkSync(pathImage);
+        }
+    }
+
+    const {_id: uid_album} = await AlbumSchema.findOne({uid_user, name: album});
+
+    // Elimino todas las fotograrías que tenía el álbum
+    emptyAlbum(user_name, uid_album);
+
+    // Elimino el álbum
+    const albumRemove = await AlbumSchema.findByIdAndDelete(uid_album);
+
+    res.json({
+        message: 'El álbum se ha eliminado',
+        success: true,
+        albumRemove
+    });   
 }
 
 const deletePhoto = async(req = request, res = response) =>
@@ -128,11 +175,12 @@ const deletePhoto = async(req = request, res = response) =>
     // Borro la imagen de la API
     if (fs.existsSync(pathImage))
     {
-        fs.rmdirSync(pathImage);
+        fs.unlinkSync(pathImage);
     }
 
     const { _id: uid_photo } = imageExists;
 
+    // ELimino la foto de la base de datos
     const photo = await PhotoSchema.findByIdAndDelete(uid_photo);
 
     // Elimino la fotografía de la colección de likes

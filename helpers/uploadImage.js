@@ -5,6 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 const UserSchema = require("../models/userSchema");
 const AlbumSchema = require("../models/albumSchema");
 const PhotoSchema = require('../models/photoSchema');
+const LikeSchema = require('../models/likeSchema');
 
 const storeImage = (image, user = '', folder = '') =>
 {
@@ -113,20 +114,22 @@ const removeOldImage = async(folder, user, oldImage) =>
 }
 
 // Vacio el álbum en caso de borrarlo
-const emptyAlbum = async(user, uid_album) =>
+const emptyAlbum = async(user_name, uid_album) =>
 {
     const images = await PhotoSchema.find({uid_album});
-    let pathImg = null;
     
     // Recorro todas las imágenes y las elimino
     for(let i in images) 
     {
-        pathImg = path.join(__dirname, '../uploads', user.user_name, 'photo', images[i].image);
+        const pathImg = path.join(__dirname, '../uploads', user_name, 'photo', images[i].image);
 
         if (fs.existsSync(pathImg))
         {
             fs.unlinkSync(pathImg);
         }
+
+        // Elimino los me gusta de las fotografías
+        await LikeSchema.findOneAndDelete({uid_photo: images[i]._id});
     }
 
     // Elimino también la imagen de la base de datos

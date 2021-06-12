@@ -101,7 +101,7 @@ const deleteAlbum = async(req = request, res = response) =>
     userConnected(req, res)
 
     const user = req.user_connected;
-    const {_id: uid_user} = user;
+    const {_id: uid_user, user_name} = user;
     const {album_name} = req.params;
     const { image } = req.body;
 
@@ -122,7 +122,7 @@ const deleteAlbum = async(req = request, res = response) =>
     const {_id: uid_album} = await Album.findOne({uid_user, name: album_name});
 
     // Elimino todas las fotograrías que tenía el álbum
-    emptyAlbum(user, uid_album);
+    emptyAlbum(user_name, uid_album);
 
     // Elimino el álbum
     const album = await Album.findByIdAndDelete(uid_album);
