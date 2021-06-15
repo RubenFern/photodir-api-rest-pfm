@@ -37,6 +37,17 @@ const AlbumSchema = Schema
 
             return date.toLocaleString('es-ES', options);
         }
+    },
+
+    datems:
+    {
+        type: Date,
+        default: () =>
+        {
+            const date = new Date();
+
+            return date.getTime();
+        }
     }
 });
 

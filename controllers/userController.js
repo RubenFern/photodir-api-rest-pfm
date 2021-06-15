@@ -122,10 +122,44 @@ const emptyDataUser = async(uid, user_name) =>
     await AlbumSchema.deleteMany({ uid_user: uid });
 }
 
+const deleteAvatar = async(req = request, res = response) =>
+{
+    // Compruebo si el usuario está conectado
+    userConnected(req, res);
+
+    // Guardo el uid del usuario conectado
+    const { _id: uid, user_name, image } = req.user_connected;
+    const defaultImage = 'default_image.jpg';
+
+    if (image === defaultImage)
+    {
+        return res.json({
+            error: 'No puedes eliminar el avatar por defecto'
+        });
+    }
+
+    const pathImage =  path.join(__dirname, '../uploads', user_name, 'avatar', image);
+
+    // Elimino la imagen de la API
+    if (fs.existsSync(pathImage))
+    {
+        fs.unlinkSync(pathImage);
+    }
+
+    // Establezco el avatar del usuario por defecto
+    const user = await User.findByIdAndUpdate(uid, { image: defaultImage }, { new: true });
+
+    res.json({
+        message: 'El avatar se ha eliminado',
+        user
+    });
+}
+
 module.exports = 
 {
     viewUser,
     addUser,
     editUser,
-    deleteUser
+    deleteUser,
+    deleteAvatar
 }

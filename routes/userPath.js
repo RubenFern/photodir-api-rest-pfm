@@ -7,7 +7,7 @@ const showErros = require('./../middlewares/showErrors');
 const validateJWT = require("../middlewares/validateJWT");
 
 // Llamada al controlador
-const {viewUser, addUser, editUser, deleteUser} = require('../controllers/userController');
+const {viewUser, addUser, editUser, deleteUser, deleteAvatar} = require('../controllers/userController');
 
 const router = Router();
 
@@ -37,5 +37,9 @@ router.put('/', [
 router.delete('/', [
     validateJWT
 ], deleteUser);
+
+router.delete('/avatar', [
+    validateJWT
+], deleteAvatar);
 
 module.exports = router;
