@@ -23,7 +23,7 @@ const viewPhotos = async(req = request, res = response) =>
     }
 
     const { _id: uid_album } = await AlbumSchema.findOne({uid_user, name: album});
-    const photos = await PhotoSchema.find({uid_album});
+    const photos = await PhotoSchema.find({ uid_album });
 
     res.json({
         photos
@@ -74,7 +74,7 @@ const addPhoto = async(req = request, res = response) =>
 
     const {title, description, image, location} = req.body;
     
-    const { _id: uid_album } = await AlbumSchema.findOne({name: album});
+    const { _id: uid_album } = await AlbumSchema.findOne({uid_user, name: album});
 
     const photo = new PhotoSchema({uid_album, title, description, image, location});
     await photo.save();

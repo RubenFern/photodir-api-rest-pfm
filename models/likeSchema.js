@@ -23,6 +23,13 @@ const LikeSchema = Schema
         ref: 'User',
         required: [true, 'El like se debe asociar a un usuario']
     },
+
+    uid_owner_image:
+    {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, 'La imagen debe pertenecer a un usuario']
+    }
 });
 
 LikeSchema.methods.toJSON = function()

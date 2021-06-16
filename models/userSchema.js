@@ -43,7 +43,7 @@ const UserSchema = Schema
     private_profile:
     {
         type: Boolean,
-        default: true
+        default: false
     },
 
     creation_date:
