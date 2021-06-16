@@ -1,8 +1,11 @@
 const {request, response} = require('express');
+const path = require('path');
+const fs = require('fs');
 
 const { removeOldImage, emptyAlbum } = require('../helpers/uploadImage');
 const userConnected = require('../helpers/userConnected');
 const albumExists = require('../helpers/validateAlbum');
+
 const Album = require('../models/albumSchema');
 const User = require('../models/userSchema');
 
@@ -134,10 +137,49 @@ const deleteAlbum = async(req = request, res = response) =>
     });
 }
 
+const deleteImage = async(req = request, res = response) =>
+{
+    // Compruebo si el usuario está conectado
+    userConnected(req, res);
+
+    const defaultImage = 'default_image.jpg';
+
+    // Guardo el uid del usuario conectado
+    const { album_name: name } = req.params;
+    const { user_name } = req.user_connected;
+
+    // Obtengo la imagen y el uid del álbum
+    const { _id: uid, image } = await Album.findOne({ name });
+
+    if (image === defaultImage)
+    {
+        return res.json({
+            error: 'No puedes eliminar el avatar por defecto'
+        });
+    }
+
+    const pathImage =  path.join(__dirname, '../uploads', user_name, 'album', image);
+
+    // Elimino la imagen de la API
+    if (fs.existsSync(pathImage))
+    {
+        fs.unlinkSync(pathImage);
+    }
+
+    // Establezco el avatar del usuario por defecto
+    const album = await Album.findByIdAndUpdate(uid, { image: defaultImage }, { new: true });
+
+    res.json({
+        message: 'La imagen se ha eliminado',
+        album
+    });
+}
+
 module.exports = 
 {
     viewAlbums,
     addAlbum,
     editAlbum,
-    deleteAlbum
+    deleteAlbum,
+    deleteImage
 }

@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
 
-const { viewAlbums, addAlbum, editAlbum, deleteAlbum } = require("../controllers/albumController");
+const { viewAlbums, addAlbum, editAlbum, deleteAlbum, deleteImage } = require("../controllers/albumController");
 
 const validateJWT = require("../middlewares/validateJWT");
 const showErros = require("../middlewares/showErrors");
@@ -33,5 +33,9 @@ router.put('/:album_name', [
 router.delete('/:album_name', [
     validateJWT
 ], deleteAlbum);
+
+router.delete('/image/:album_name', [
+    validateJWT
+], deleteImage);
 
 module.exports = router;
