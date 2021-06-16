@@ -77,13 +77,13 @@ const editAlbum = async(req = request, res = response) =>
         });
     }
 
-    // Compruebo que el nuevo nombre no sea igual a otro álbum ya creado
-    /*if (await albumExists(uid_user, new_name))
+    // Si el álbum del usuario existe y no usa el mismo nombre que tenía devuelvo un error
+    if (await albumExists(uid_user, new_name) && new_name !== album_name)
     {
         return res.status(401).json({
             message: 'Ya has usado este nombre para un álbum'
         });
-    }*/ // No lo compruebo porque el usuario podría editar la descripción pero el nombre no
+    }
 
     // Si el álbum introducido es válido obtengo el id del álbum del usuario que quiere editar
     const {_id: uid_album} = await Album.findOne({name: album_name, uid_user});
