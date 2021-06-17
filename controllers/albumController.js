@@ -80,7 +80,7 @@ const editAlbum = async(req = request, res = response) =>
     // Si el álbum del usuario existe y no usa el mismo nombre que tenía devuelvo un error
     if (await albumExists(uid_user, new_name) && new_name !== album_name)
     {
-        return res.status(401).json({
+        return res.json({
             message: 'Ya has usado este nombre para un álbum'
         });
     }
