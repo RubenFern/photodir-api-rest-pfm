@@ -129,7 +129,7 @@ const emptyAlbum = async(user_name, uid_album) =>
         }
 
         // Elimino los me gusta de las fotografías
-        await LikeSchema.findOneAndDelete({uid_photo: images[i]._id});
+        await LikeSchema.deleteMany({uid_photo: images[i]._id});
     }
 
     // Elimino también la imagen de la base de datos

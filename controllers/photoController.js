@@ -88,9 +88,9 @@ const addPhoto = async(req = request, res = response) =>
 const editPhoto = async(req = request, res = response) =>
 {
     const { uid } = req.params;
-    const { title, description, location } = req.body;
+    const { title, description } = req.body;
 
-    const photo = await PhotoSchema.findByIdAndUpdate(uid, {title, description, location}, {new: true});
+    const photo = await PhotoSchema.findByIdAndUpdate(uid, {title, description}, {new: true});
     
     res.json({
         message: 'Fotografía editada',
