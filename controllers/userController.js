@@ -49,6 +49,8 @@ const editUser = async(req = request, res = response) =>
 
     // Guardo el uid del usuario conectado
     const {_id: uid} = req.user_connected;
+    const { private_profile } = await User.findById(uid);
+
     // Desestructuro los campos que no quiero editar para guardar los que sí y la contraseña para su cifrado
     const {_id, password, email, user_name, is_admin, ...data} = req.body;
 
@@ -65,6 +67,15 @@ const editUser = async(req = request, res = response) =>
         return res.json({
             message: 'No ha editado ningún dato'
         })
+    }
+
+    // Si el editado es cambio de perfil a privado borro los likes de sus fotos
+    if (data.private_profile !== private_profile)
+    {
+        if (data.private_profile)
+        {
+            await LikeSchema.deleteMany({ uid_owner_image: uid });
+        }
     }
 
     const user = await User.findByIdAndUpdate(uid, data, { new: true });
@@ -119,6 +130,7 @@ const emptyDataUser = async(uid, user_name) =>
 
     // Elimino los datos de la base de datos de album y likes
     await LikeSchema.deleteMany({ uid_user_liked: uid });
+    await LikeSchema.deleteMany({ uid_owner_image: uid });
     await AlbumSchema.deleteMany({ uid_user: uid });
 }
 
