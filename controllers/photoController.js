@@ -110,7 +110,7 @@ const deletePhoto = async(req = request, res = response) =>
     const photo = await PhotoSchema.findByIdAndDelete(uid);
 
     // Elimino la fotografía de la colección de likes
-    await LikeSchema.findOneAndDelete({uid_photo: uid});
+    await LikeSchema.deleteMany({uid_photo: uid});
 
     res.json({
         message: 'Fotografía eliminada',

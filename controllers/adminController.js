@@ -184,7 +184,7 @@ const deletePhoto = async(req = request, res = response) =>
     const photo = await PhotoSchema.findByIdAndDelete(uid_photo);
 
     // Elimino la fotografía de la colección de likes
-    await LikeSchema.findOneAndDelete({uid_photo});
+    await LikeSchema.deleteMany({uid_photo});
 
     res.json({
         message: 'Fotografía eliminada',
@@ -208,6 +208,9 @@ const setRoleAdmin = async(req = request, res = response) =>
 
     const { is_admin, _id: uid } = await UserSchema.findOne({ user_name });
     const user = await UserSchema.findByIdAndUpdate(uid, {is_admin: !is_admin}, { new: true });
+
+    // Elimino los Likes que dieron a las fotografías de este usuario
+    await LikeSchema.deleteMany({uid_owner_image: uid});
 
     if (is_admin)
     {
