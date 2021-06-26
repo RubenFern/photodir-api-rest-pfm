@@ -10,7 +10,7 @@ La API está realizada en base al Stack de MERN, con tecnologías como Express y
 2. Tener instalada una base de datos de MongoDB localmente o crear un clúster que proporciona MongoDB gratuitamente. [Web oficial](https://www.mongodb.com/).
 3. El archivo .env debe contener las variables de entorno que requiera la API, como la conexión con la base de datos, la clave para generar Tokens o el puerto de conexión del servidor.
 
-## Instalación :bulb:
+## Instalación :rocket:
 
 Para instalar la API y usarla, puedes descargar este proyecto o realizar un fork o clone. 
 
