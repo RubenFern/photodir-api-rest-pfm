@@ -38,13 +38,13 @@ Con esto ya puedes empezar a realizar peticiones a la API.
 
 ## Tecnologías :computer:
 
-- **bcryptjs - 2.4.3**
-- **cors - 2.8.5**
-- **dotenv - 8.2.0**
-- **express - 4.17.1**
-- **express-fileupload - 1.2.1**
-- **express-validator - 6.10.0**
-- **jsonwebtoken - 8.5.1**
-- **mongoose - 5.12.5**
-- **nodemon - 2.0.7**
-- **uuid - 8.3.2"**
+- **bcryptjs - v2.4.3**
+- **cors - v2.8.5**
+- **dotenv - v8.2.0**
+- **express - v4.17.1**
+- **express-fileupload - v1.2.1**
+- **express-validator - v6.10.0**
+- **jsonwebtoken - v8.5.1**
+- **mongoose - v5.12.5**
+- **nodemon - v2.0.7**
+- **uuid - v8.3.2**
