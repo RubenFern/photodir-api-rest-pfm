@@ -4,13 +4,13 @@ Esta API es una parte del proyecto de fin de módulo que trabaja conjuntamente c
 
 La API está realizada en base al Stack de MERN, con tecnologías como Express y Node, junto a Mongoose para el manejo de la base de datos de MongoDB.
 
-## Requisitos
+## Requisitos :heavy_check_mark:
 
 1. Tener instalado Node en el equipo. [Web oficial](https://nodejs.org/en/).
 2. Tener instalada una base de datos de MongoDB localmente o crear un clúster que proporciona MongoDB gratuitamente. [Web oficial](https://www.mongodb.com/).
 3. El archivo .env debe contener las variables de entorno que requiera la API, como la conexión con la base de datos, la clave para generar Tokens o el puerto de conexión del servidor.
 
-## Instalación
+## Instalación :bulb:
 
 Para instalar la API y usarla, puedes descargar este proyecto o realizar un fork o clone. 
 
@@ -36,7 +36,7 @@ nodemon app.js
 
 Con esto ya puedes empezar a realizar peticiones a la API.
 
-## Tecnologías
+## Tecnologías :computer:
 
 - **bcryptjs - 2.4.3**
 - **cors - 2.8.5**
