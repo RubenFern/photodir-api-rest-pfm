@@ -6,8 +6,35 @@ La API está realizada en base al Stack de MERN, con tecnologías como Express y
 
 ## Requisitos
 
+1. Tener instalado Node en el equipo. [Web oficial](https://nodejs.org/en/).
+2. Tener instalada una base de datos de MongoDB localmente o crear un clúster que proporciona MongoDB gratuitamente. [Web oficial](https://www.mongodb.com/).
+3. El archivo .env debe contener las variables de entorno que requiera la API, como la conexión con la base de datos, la clave para generar Tokens o el puerto de conexión del servidor.
+
 ## Instalación
 
+Para instalar la API y usarla, puedes descargar este proyecto o realizar un fork o clone. 
+
+Una vez tengas el código fuente accede al directorio donde se encuentra desde un terminal de consola y ejecuta.
+
+```
+npm install
+```
+
+Esto instalará todas las dependencias del proyecto. Dependiendo de tu velocidad de conexión y de disco duro tardará más o menos.
+
+A continuación puedes encender la API con el comando.
+
+```
+node app.js
+```
+
+o
+
+```
+nodemon app.js
+```
+
+Con esto ya puedes empezar a realizar peticiones a la API.
 
 ## Tecnologías
 
