@@ -1,6 +1,6 @@
 # API Rest en Node :zap:
 
-Esta API es una parte del proyecto de fin de módulo que trabaja conjuntamente con la [interfaz de React](https://github.com/RubenFern/Photodir-PFM-Front-React) que se ejecutan en el front-end.
+Esta API es una parte del proyecto de fin de módulo que trabaja conjuntamente con la [interfaz de React](https://github.com/RubenFern/Photodir-Front-React-PFM) que se ejecutan en el front-end.
 
 La API está realizada en base al Stack de MERN, con tecnologías como Express y Node, junto a Mongoose para el manejo de la base de datos de MongoDB.
 
