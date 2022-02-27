@@ -12,7 +12,7 @@ La API está realizada en base al Stack de MERN, con tecnologías como Express y
 
 ## Instalación :rocket:
 
-Para instalar la API y usarla, puedes descargar este proyecto o realizar un fork o clone. 
+Para instalar la API y usarla, puedes descargar este proyecto o realizar un fork. 
 
 Una vez tengas el código fuente accede al directorio donde se encuentra desde un terminal de consola y ejecuta.
 
